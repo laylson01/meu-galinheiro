@@ -485,7 +485,7 @@ function renderHeader(){
 }
 
 /* ---------- vendas ---------- */
-function precos(){const p=S.cfg.precos||{};return {dz:p.duzia!=null?+p.duzia:3.6,mz:p.meia!=null?+p.meia:2};}
+function precos(){const p=S.cfg.precos||{};return {dz:p.duzia!=null?+p.duzia:3.2,mz:p.meia!=null?+p.meia:1.6};}
 function dzTxt(n){const d=Math.floor(n/12),r=n%12;return d+" dúzia"+(d===1?"":"s")+(r?" e "+r+" ovo"+(r===1?"":"s"):"");}
 function stockInfo(){
   const ac=S.cfg.stock;
