@@ -1,0 +1,1243 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#E3A21A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Galinheiro">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;font:14px/1.4 system-ui,sans-serif}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<script>window.GALINHEIRO_STANDALONE = true;</script>
+</head>
+<body>
+<title>Meu Galinheiro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: one narrow column like a field notebook, bottom tab bar for one-thumb use at the coop */
+:root{
+  --bg:#F3F4EE; --surface:#FFFFFF; --sunk:#E9EBE2; --ink:#1E2318; --muted:#626C58; --line:#D9DDD0;
+  --yolk:#E3A21A; --yolk-ink:#3F2B00; --bar:#B9C1AC;
+  --good:#3D6A37; --warn:#A8521A; --bad:#A3302A;
+  --s-gasto:#C98207; --s-venda:#1E8A70; --s-ovo:#6B7A55; --s-ovo2:#C9CFBC;
+  --comb:#C63D2B; --beak:#9C5A00;
+  --f-display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-num:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#13160F; --surface:#1C2016; --sunk:#252A1E; --ink:#ECEFE4; --muted:#A3AC96; --line:#323A29;
+  --yolk:#F0B437; --yolk-ink:#2A1C00; --bar:#4A5440;
+  --good:#8CC07F; --warn:#E8955A; --bad:#EE8075; --s-gasto:#C0841A; --s-venda:#2E9E83; --s-ovo:#97A87D; --s-ovo2:#4A5440; --comb:#E0604C; --beak:#7A4700; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#13160F; --surface:#1C2016; --sunk:#252A1E; --ink:#ECEFE4; --muted:#A3AC96; --line:#323A29;
+  --yolk:#F0B437; --yolk-ink:#2A1C00; --bar:#4A5440;
+  --good:#8CC07F; --warn:#E8955A; --bad:#EE8075; --s-gasto:#C0841A; --s-venda:#2E9E83; --s-ovo:#97A87D; --s-ovo2:#4A5440; --comb:#E0604C; --beak:#7A4700; color-scheme:dark;}
+
+*,*::before,*::after{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--ink)}
+body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(84px + env(safe-area-inset-bottom,0px))}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px;padding-block:20px}
+h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.2rem;font-weight:600}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+.num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+header.top{display:flex;flex-direction:column;gap:14px;padding-top:4px}
+.brand{display:flex;align-items:center;gap:14px}
+.mark{width:54px;height:54px;flex:none}
+.brandtxt{min-width:0}
+.brand h1{font-size:2rem;line-height:1.05}
+.greet{color:var(--muted);font-size:.95rem;margin-top:3px}
+.today{display:flex;gap:8px;flex-wrap:wrap}
+.tchip{display:inline-flex;align-items:center;gap:8px;padding:8px 13px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-weight:700;font-size:.88rem;color:var(--ink)}
+.tchip .dot{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:none}
+.tchip.good .dot{background:var(--good)} .tchip.warn .dot{background:var(--warn)} .tchip.alert{border-color:var(--yolk)} .tchip.alert .dot{background:var(--yolk)}
+.tchip:hover{background:var(--sunk)}
+.banner{background:var(--sunk);border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:.92rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.spread{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--yolk);outline-offset:2px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;font-weight:700}
+.btn.primary{background:var(--yolk);border-color:var(--yolk);color:var(--yolk-ink)}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--bad);border-color:var(--bad);background:transparent}
+.btn.small{padding:6px 10px;font-size:.88rem}
+.btn:disabled{opacity:.5;cursor:default}
+input[type=date],input[type=number],input[type=text],select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;width:100%}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 140px}
+.field span{font-size:.85rem;color:var(--muted);font-weight:700}
+
+/* egg steppers */
+.steppers{display:grid;gap:10px}
+.stepper{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.stepper:first-child{border-top:0}
+.stepper .ctrl{display:flex;align-items:center;gap:6px}
+.stepper button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:1.5rem;line-height:1;font-weight:700}
+.stepper input{width:64px;text-align:center;font-family:var(--f-num);font-size:1.4rem;padding:8px 4px;-moz-appearance:textfield}
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+.stepper .lbl b{display:block}
+.stepper .lbl small{color:var(--muted);font-size:.85rem}
+.stepper.main input{font-size:1.9rem;width:84px;border-color:var(--yolk)}
+
+/* agenda */
+.agenda{display:flex;flex-direction:column;gap:8px}
+.ag{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:10px 12px;border-radius:12px;background:var(--sunk)}
+.ag .when{font-family:var(--f-num);font-size:.8rem;font-weight:500;padding:3px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line);white-space:nowrap}
+.ag.today .when{background:var(--yolk);border-color:var(--yolk);color:var(--yolk-ink)}
+.ag b{display:block}
+.ag small{color:var(--muted)}
+
+/* chart */
+.chart svg{width:100%;height:auto;display:block}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat .v{font-family:var(--f-num);font-size:1.5rem;font-variant-numeric:tabular-nums}
+.stat .k{font-size:.8rem;color:var(--muted)}
+
+/* list of days */
+.days{list-style:none;margin:0;padding:0}
+.days li{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
+.days li:first-child{border-top:0}
+.days .meta{font-size:.85rem;color:var(--muted)}
+.days button{background:none;border:0;text-align:left;padding:0;min-width:0}
+
+/* batches */
+.batch{gap:12px}
+.batch .day{font-family:var(--f-display);font-weight:800;font-size:2.4rem;line-height:1}
+.batch .day small{font-size:1rem;font-weight:600;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:4px;font-size:.78rem;font-weight:700;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
+.chip.ex{border-style:dashed}
+.chip.good{color:var(--good);border-color:currentColor}
+.chip.warn{color:var(--warn);border-color:currentColor}
+.chip.bad{color:var(--bad);border-color:currentColor}
+
+.track{position:relative;height:34px;margin:6px 4px 18px}
+.track .rail{position:absolute;left:0;right:0;top:12px;height:10px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.track .fill{position:absolute;left:0;top:0;bottom:0;background:var(--yolk);border-radius:999px}
+.track .mk{position:absolute;top:6px;width:2px;height:22px;background:var(--muted);transform:translateX(-1px)}
+.track .mk span{position:absolute;top:26px;left:50%;transform:translateX(-50%);font-family:var(--f-num);font-size:.72rem;color:var(--muted)}
+.track .mk.done{background:var(--ink)}
+.next{font-size:.95rem}
+.next b{font-weight:700}
+details.more{border-top:1px solid var(--line);padding-top:10px}
+details.more summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:"+";font-family:var(--f-num);color:var(--muted)}
+details.more[open] summary::after{content:"−"}
+.inner{display:flex;flex-direction:column;gap:16px;padding-top:14px}
+.readings{width:100%;border-collapse:collapse;font-size:.9rem}
+.readings td,.readings th{padding:6px 4px;border-top:1px solid var(--line);text-align:left}
+.readings th{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-top:0}
+.readings td.n{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.hint{font-size:.85rem;color:var(--muted)}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.9rem}
+
+table.rates{width:100%;border-collapse:collapse;font-size:.92rem}
+table.rates th,table.rates td{padding:8px 6px;border-top:1px solid var(--line);text-align:right}
+table.rates th:first-child,table.rates td:first-child{text-align:left}
+table.rates th{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-top:0}
+table.rates td.n{font-family:var(--f-num);font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+
+.empty{text-align:center;padding:28px 12px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.empty svg{width:56px;height:56px}
+
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));display:flex;justify-content:center;z-index:5}
+nav.tabs .in{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:560px;width:100%}
+nav.tabs button{border:0;background:transparent;padding:8px 2px;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:700;font-size:.74rem;color:var(--muted);min-width:0}
+/* vendas */
+.stockbig{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.stockbig .n{font-family:var(--f-display);font-weight:800;font-size:3rem;line-height:1}
+.stockbig .u{font-size:1.1rem;font-weight:700}
+.carton{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;max-width:180px}
+.carton i{aspect-ratio:4/5;border-radius:50% 50% 46% 46% / 58% 58% 42% 42%;background:var(--sunk);border:1px solid var(--line);max-width:100%}
+.carton i.on{background:var(--yolk);border-color:var(--yolk)}
+.totalbtn{font-size:1.05rem;padding:14px}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-current="page"]{color:var(--ink);background:var(--sunk)}
+nav.tabs button[aria-current="page"] svg .acc{fill:var(--yolk)}
+
+/* contas */
+.seg{display:inline-flex;background:var(--sunk);border-radius:10px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;padding:7px 14px;border-radius:8px;font-weight:700;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.monthnav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px}
+.monthnav h2{text-align:center;font-size:1.4rem}
+.monthnav .btn{width:44px;height:44px;padding:0;font-size:1.3rem}
+.v.pos{color:var(--good)} .v.neg{color:var(--bad)}
+.unit{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.cats{display:flex;flex-direction:column;gap:10px}
+.cat{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:.92rem}
+.cat .bar{grid-column:1 / -1;height:8px;border-radius:999px;background:var(--sunk);overflow:hidden}
+.cat .bar i{display:block;height:100%;background:var(--yolk);border-radius:999px}
+.amt{font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+.amt.in{color:var(--good)}
+.xbtn{border:0;background:none;color:var(--muted);font-size:1.2rem;width:36px;height:36px;border-radius:8px}
+.xbtn:hover{background:var(--sunk)}
+/* resumo charts */
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.chart .hit{cursor:pointer}
+.tip{position:fixed;z-index:8;pointer-events:none;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.82rem;box-shadow:0 6px 18px rgba(0,0,0,.18);min-width:150px}
+.tip b{display:block;font-family:var(--f-display);margin-bottom:4px}
+.tip div{display:flex;justify-content:space-between;gap:12px}
+.tip .amt{font-size:.8rem}
+.sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:460px){.detail-grid{grid-template-columns:1fr}}
+.kv{display:flex;flex-direction:column;gap:6px;min-width:0}
+.kv div{display:flex;justify-content:space-between;gap:10px;font-size:.92rem;border-top:1px solid var(--line);padding-top:6px}
+.kv div:first-of-type{border-top:0;padding-top:0}
+table.rates tr.sel td{background:var(--sunk)}
+table.rates button{background:none;border:0;padding:0;font-weight:700;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+.toast{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:700;font-size:.9rem;z-index:9;transition:opacity .2s}
+.toast[hidden]{display:none!important}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 52 52" aria-hidden="true">
+        <rect width="52" height="52" rx="15" fill="var(--yolk)"/>
+        <path d="M17.5 19.5c-.6-5.2 3.4-7.3 5.6-3.6c1.3-5 6.6-4.6 6.7.2c3.3-3 7-.3 5.2 4z" fill="var(--comb)"/>
+        <circle cx="26" cy="29" r="12.5" fill="var(--surface)"/>
+        <path d="M37.6 26.4l7.4 3.2-7.4 3.1z" fill="var(--beak)"/>
+        <path d="M35.5 33.5c2.6.4 3.6 3.2 2.3 5.4c-1.6 1.8-4.2.4-3.9-2.1z" fill="var(--comb)"/>
+        <circle cx="31" cy="26" r="2.1" fill="var(--ink)"/>
+      </svg>
+      <div class="brandtxt"><h1>Meu Galinheiro</h1><p class="greet" id="hoje-txt"></p></div>
+    </div>
+    <div class="today" id="today-chips"></div>
+  </header>
+  <div class="banner" id="banner" hidden></div>
+
+  <!-- OVOS -->
+  <section id="tab-ovos" class="wrap" style="padding:0">
+    <div class="panel" id="agenda-panel" hidden>
+      <h2>Na incubadora</h2>
+      <div class="agenda" id="agenda"></div>
+    </div>
+
+    <form class="panel" id="egg-form" autocomplete="off">
+      <div class="spread">
+        <h2>Recolha de ovos</h2>
+        <input type="date" id="egg-date" style="width:auto" aria-label="Dia da recolha">
+      </div>
+      <div class="steppers">
+        <div class="stepper main"><div class="lbl"><b>Recolhidos</b><small>Todos os ovos do dia</small></div>
+          <div class="ctrl"><button type="button" data-step="egg-total" data-d="-1" aria-label="Menos um">−</button><input type="number" id="egg-total" min="0" inputmode="numeric" value="0"><button type="button" data-step="egg-total" data-d="1" aria-label="Mais um">+</button></div></div>
+        <div class="stepper"><div class="lbl"><b>Partidos ou sujos</b><small>Não aproveitáveis</small></div>
+          <div class="ctrl"><button type="button" data-step="egg-partidos" data-d="-1" aria-label="Menos um">−</button><input type="number" id="egg-partidos" min="0" inputmode="numeric" value="0"><button type="button" data-step="egg-partidos" data-d="1" aria-label="Mais um">+</button></div></div>
+        <div class="stepper"><div class="lbl"><b>Guardados para chocar</b><small>Separados para a incubadora</small></div>
+          <div class="ctrl"><button type="button" data-step="egg-incubar" data-d="-1" aria-label="Menos um">−</button><input type="number" id="egg-incubar" min="0" inputmode="numeric" value="0"><button type="button" data-step="egg-incubar" data-d="1" aria-label="Mais um">+</button></div></div>
+      </div>
+      <button class="btn primary" type="submit" id="egg-save">Guardar recolha</button>
+    </form>
+
+    <div class="panel chart">
+      <div class="spread"><h2>Últimos 14 dias</h2><span class="muted" style="font-size:.85rem">ovos recolhidos</span></div>
+      <div id="chart"></div>
+      <div class="stats" id="stats14"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Registos</h2>
+      <ul class="days" id="days"></ul>
+    </div>
+  </section>
+
+  <!-- INCUBADORA -->
+  <section id="tab-inc" class="wrap" style="padding:0" hidden>
+    <div class="spread"><h2 style="font-size:1.4rem">Lotes</h2><button class="btn primary" id="new-batch-btn" type="button">Novo lote</button></div>
+    <form class="panel" id="batch-form" hidden autocomplete="off">
+      <h3>Novo lote na incubadora</h3>
+      <div class="row">
+        <label class="field"><span>Nome</span><input type="text" id="b-nome" placeholder="Ex.: Lote pedreses" required></label>
+        <label class="field"><span>Ave</span><select id="b-especie">
+          <option value="galinha">Galinha · 21 dias</option>
+          <option value="codorniz">Codorniz · 17 dias</option>
+          <option value="pato">Pato · 28 dias</option>
+          <option value="peru">Peru · 28 dias</option>
+        </select></label>
+      </div>
+      <div class="row">
+        <label class="field"><span>Entrou na incubadora</span><input type="date" id="b-inicio" required></label>
+        <label class="field"><span>N.º de ovos</span><input type="number" id="b-ovos" min="1" inputmode="numeric" required></label>
+      </div>
+      <label class="field"><span>Origem (opcional)</span><input type="text" id="b-origem" placeholder="Ex.: galo pedrês × galinhas brancas"></label>
+      <div class="row"><button class="btn primary" type="submit">Criar lote</button><button class="btn ghost" type="button" id="batch-cancel">Cancelar</button></div>
+    </form>
+    <div id="batches" class="wrap" style="padding:0"></div>
+    <div id="done-wrap" class="wrap" style="padding:0" hidden>
+      <h2 style="font-size:1.1rem" class="muted">Lotes concluídos</h2>
+      <div id="batches-done" class="wrap" style="padding:0"></div>
+    </div>
+  </section>
+
+  <!-- VENDAS -->
+  <section id="tab-ven" class="wrap" style="padding:0" hidden>
+    <div class="panel">
+      <div class="spread"><h2>Ovos disponíveis</h2><button class="btn small" type="button" id="ac-btn">Acertar contagem</button></div>
+      <div class="spread" style="align-items:center">
+        <div><div class="stockbig"><span class="n" id="st-dz">0</span><span class="u" id="st-dz-u">dúzias</span></div><p class="muted" id="st-sub"></p></div>
+        <div class="carton" id="st-carton" aria-hidden="true"></div>
+      </div>
+      <p class="next" id="st-age"></p>
+      <form class="row" id="ac-form" hidden autocomplete="off" style="align-items:flex-end">
+        <label class="field"><span>Quantos ovos tens agora, já com a recolha de hoje?</span><input type="number" id="ac-n" min="0" inputmode="numeric" required></label>
+        <button class="btn primary" type="submit">Guardar contagem</button><button class="btn ghost" type="button" id="ac-cancel">Cancelar</button>
+      </form>
+      <p class="hint">O stock soma os ovos aproveitáveis registados e tira os vendidos e os guardados para chocar. Os que gastas em casa não entram, por isso acerta a contagem de vez em quando.</p>
+    </div>
+
+    <form class="panel" id="sale-form" autocomplete="off">
+      <div class="spread"><h2>Registar venda</h2><button class="btn small ghost" type="button" id="pr-btn">Preços</button></div>
+      <div class="row" id="pr-form" hidden style="align-items:flex-end">
+        <label class="field"><span>Preço da dúzia (€)</span><input type="number" id="pr-dz" step="0.05" min="0" inputmode="decimal"></label>
+        <label class="field"><span>Preço da meia dúzia (€)</span><input type="number" id="pr-mz" step="0.05" min="0" inputmode="decimal"></label>
+        <button class="btn primary" type="button" id="pr-save">Guardar preços</button>
+      </div>
+      <div class="steppers">
+        <div class="stepper main"><div class="lbl"><b>Dúzias</b><small id="pr-dz-txt"></small></div>
+          <div class="ctrl"><button type="button" data-step="s-dz" data-d="-1" aria-label="Menos uma dúzia">−</button><input type="number" id="s-dz" min="0" inputmode="numeric" value="1"><button type="button" data-step="s-dz" data-d="1" aria-label="Mais uma dúzia">+</button></div></div>
+        <div class="stepper"><div class="lbl"><b>Meias dúzias</b><small id="pr-mz-txt"></small></div>
+          <div class="ctrl"><button type="button" data-step="s-mz" data-d="-1" aria-label="Menos meia dúzia">−</button><input type="number" id="s-mz" min="0" inputmode="numeric" value="0"><button type="button" data-step="s-mz" data-d="1" aria-label="Mais meia dúzia">+</button></div></div>
+      </div>
+      <label class="field"><span>Valor recebido (€)</span><input type="number" id="s-valor" step="0.01" min="0" inputmode="decimal"></label>
+      <p class="hint" id="s-warn" hidden></p>
+      <button class="btn primary totalbtn" type="submit" id="s-save">Registar venda</button>
+    </form>
+
+    <div class="panel">
+      <h2>Esta semana</h2>
+      <div class="stats" id="wk-stats"></div>
+      <ul class="days" id="wk-list"></ul>
+    </div>
+  </section>
+
+  <!-- CONTAS -->
+  <section id="tab-con" class="wrap" style="padding:0" hidden>
+    <div class="monthnav"><button class="btn ghost" id="m-prev" type="button" aria-label="Mês anterior">‹</button><h2 id="m-titulo"></h2><button class="btn ghost" id="m-next" type="button" aria-label="Mês seguinte">›</button></div>
+    <div class="panel">
+      <div class="stats" id="con-stats"></div>
+      <div class="unit">
+        <div class="stats" id="con-unit"></div>
+        <p class="hint" id="con-hint"></p>
+      </div>
+    </div>
+    <form class="panel" id="mov-form" autocomplete="off">
+      <div class="spread"><h2>Novo registo</h2>
+        <div class="seg" role="group" aria-label="Tipo"><button type="button" data-tipo="despesa" aria-pressed="true">Despesa</button><button type="button" data-tipo="venda" aria-pressed="false">Venda</button></div></div>
+      <div class="row">
+        <label class="field"><span>Categoria</span><select id="m-cat"></select></label>
+        <label class="field"><span>Valor (€)</span><input type="number" id="m-valor" step="0.01" min="0" inputmode="decimal" placeholder="0,00" required></label>
+      </div>
+      <div class="row" id="m-qtd-row" hidden>
+        <label class="field"><span id="m-qtd-lbl">Quantidade</span><input type="number" id="m-qtd" min="0" inputmode="numeric"></label>
+        <label class="field" id="m-unid-wrap"><span>Unidade</span><select id="m-unid"><option value="duzias">dúzias</option><option value="ovos">ovos</option></select></label>
+      </div>
+      <div class="row">
+        <label class="field"><span>Data</span><input type="date" id="m-data" required></label>
+        <label class="field"><span>Nota (opcional)</span><input type="text" id="m-desc" placeholder="Ex.: 2 sacos de 25 kg"></label>
+      </div>
+      <button class="btn primary" type="submit" id="m-save">Guardar despesa</button>
+    </form>
+    <div class="panel"><h2>Para onde vai o dinheiro</h2><div class="cats" id="con-cats"></div></div>
+    <div class="panel"><h2>Movimentos do mês</h2><ul class="days" id="movs"></ul></div>
+  </section>
+
+  <!-- RESUMO -->
+  <section id="tab-res" class="wrap" style="padding:0" hidden>
+    <div class="spread">
+      <div class="seg" role="group" aria-label="Período"><button type="button" data-res-n="6" aria-pressed="false">6 meses</button><button type="button" data-res-n="12" aria-pressed="true">12 meses</button></div>
+      <button class="btn primary" type="button" id="xlsx-btn">Exportar para Excel</button>
+    </div>
+    <p class="hint" id="xlsx-hint" hidden></p>
+
+    <div class="panel">
+      <p class="label" id="res-periodo"></p>
+      <div class="stats" id="res-hero"></div>
+    </div>
+
+    <div class="panel chart">
+      <div class="spread"><h2>Gastos e vendas por mês</h2>
+        <span class="legend"><span><i style="background:var(--s-gasto)"></i>Gastos</span><span><i style="background:var(--s-venda)"></i>Vendas</span></span></div>
+      <div id="ch-money"></div>
+    </div>
+
+    <div class="panel chart">
+      <div class="spread"><h2>Ovos recolhidos por mês</h2>
+        <span class="legend"><span><i style="background:var(--s-ovo)"></i>Aproveitáveis</span><span><i style="background:var(--s-ovo2)"></i>Partidos</span></span></div>
+      <div id="ch-eggs"></div>
+    </div>
+
+    <div class="panel chart">
+      <div class="spread"><h2>Custo e preço por dúzia</h2>
+        <span class="legend"><span><i style="background:var(--s-gasto)"></i>Custo</span><span><i style="background:var(--s-venda)"></i>Preço de venda</span></span></div>
+      <div id="ch-dz"></div>
+      <p class="hint">Quando a linha do preço está acima da do custo, cada dúzia vendida dá lucro.</p>
+    </div>
+
+    <div class="panel" id="res-detail"></div>
+
+    <div class="panel">
+      <h2>Mês a mês</h2>
+      <div class="tablewrap"><table class="rates" id="res-table"></table></div>
+    </div>
+    <div class="panel">
+      <h2>Resultados da incubadora</h2>
+      <p class="hint">Fertilidade = férteis ÷ ovos postos. Eclosão = nascidos ÷ férteis.</p>
+      <div class="tablewrap"><table class="rates" id="rates"></table></div>
+    </div>
+
+    <div class="panel" id="backup-panel" hidden>
+      <h2>Cópia de segurança</h2>
+      <p class="muted" id="backup-txt">Os teus registos ficam guardados só neste aparelho. Guarda uma cópia de vez em quando (no Drive, no e-mail) para não os perderes se mudares de telemóvel ou limpares o browser.</p>
+      <div class="row">
+        <button class="btn primary" type="button" id="bk-save">Guardar cópia</button>
+        <label class="btn" for="bk-file" style="cursor:pointer">Restaurar cópia</label>
+        <input type="file" id="bk-file" accept=".json,application/json" hidden>
+      </div>
+      <div class="confirm" id="bk-confirm" hidden></div>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs" aria-label="Secções">
+  <div class="in">
+    <button type="button" data-tab="ovos" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="acc" d="M12 3c3.6 0 6.5 5.2 6.5 10a6.5 6.5 0 0 1-13 0C5.5 8.2 8.4 3 12 3z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Ovos</button>
+    <button type="button" data-tab="inc"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="6" width="17" height="13" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle class="acc" cx="9" cy="12.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle class="acc" cx="15" cy="12.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 6V4h8v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Incubadora</button>
+    <button type="button" data-tab="ven"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9h18l-2 10H5L3 9z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><ellipse class="acc" cx="9" cy="8" rx="2.4" ry="3" fill="none" stroke="currentColor" stroke-width="1.5"/><ellipse class="acc" cx="15" cy="8" rx="2.4" ry="3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>Vendas</button>
+    <button type="button" data-tab="con"><svg viewBox="0 0 24 24" aria-hidden="true"><circle class="acc" cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M15.2 8.6a4 4 0 1 0 0 6.8M7.5 11h6M7.5 13.2h6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Contas</button>
+    <button type="button" data-tab="res"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V5M16 20v-7M21 20H3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><rect class="acc" x="8.6" y="5" width="2.8" height="15" fill="none"/></svg>Resumo</button>
+  </div>
+</nav>
+<div class="toast" id="toast" role="status" hidden></div>
+<div class="tip" id="tip" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const MESES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const MESES_L=["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+const DIAS_S=["dom","seg","ter","qua","qui","sex","sáb"];
+const ESPECIES={galinha:{n:"Galinha",dias:21},codorniz:{n:"Codorniz",dias:17},pato:{n:"Pato",dias:28},peru:{n:"Peru",dias:28}};
+
+function todayISO(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");}
+function dnum(iso){const p=iso.split("-").map(Number);return Math.round(Date.UTC(p[0],p[1]-1,p[2])/864e5);}
+function addDays(iso,n){return new Date((dnum(iso)+n)*864e5).toISOString().slice(0,10);}
+function diff(a,b){return dnum(b)-dnum(a);}
+function fmtShort(iso){const p=iso.split("-");return (+p[2])+" "+MESES[+p[1]-1];}
+function fmtDay(iso){const w=new Date(dnum(iso)*864e5).getUTCDay();return DIAS_S[w]+", "+fmtShort(iso);}
+function pct(a,b){return b>0?Math.round(a/b*100)+"%":"—";}
+
+/* ---------- state ---------- */
+const S={eggs:new Map(),batches:[],movs:[],cfg:{},ready:false,demo:false,open:new Set(),confirm:null};
+let store=null; // set below
+const TODAY=todayISO();
+
+/* ---------- incubation logic ---------- */
+function marcos(b){
+  const D=(ESPECIES[b.especie]||ESPECIES.galinha).dias;
+  return [
+    {dia:7,t:"1.ª ovoscopia",d:"Retira os ovos claros (inférteis)."},
+    {dia:14,t:"2.ª ovoscopia",d:"Retira embriões que pararam."},
+    {dia:D-3,t:"Parar a viragem",d:"Sobe a humidade para 65–70% e não abras mais."},
+    {dia:D,t:"Eclosão prevista",d:"Deixa os pintos secar antes de os tirar."}
+  ];
+}
+function diaDe(b){return diff(b.inicio,TODAY);}
+function fase(b,dia){const D=(ESPECIES[b.especie]||ESPECIES.galinha).dias;return dia>=D-3?"eclosao":"incubacao";}
+function avaliar(b,r){
+  const f=fase(b,diff(b.inicio,r.data));
+  const out=[];
+  if(r.temp!=null&&r.temp!==""){const t=+r.temp;if(t<37.2||t>37.8)out.push(t<37.2?"temp. baixa":"temp. alta");}
+  if(r.hum!=null&&r.hum!==""){const h=+r.hum;const lo=f==="eclosao"?65:45,hi=f==="eclosao"?75:55;if(h<lo||h>hi)out.push(h<lo?"hum. baixa":"hum. alta");}
+  return out;
+}
+function proximo(b){
+  const dia=diaDe(b);
+  return marcos(b).find(m=>m.dia>=dia)||null;
+}
+
+/* ---------- rendering ---------- */
+function render(){
+  renderHeader();
+  renderBanner();renderAgenda();renderChart();renderDays();renderBatches();renderResumo();renderContas();renderVendas();
+}
+
+/* ---------- header ---------- */
+const DIAS_L=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+function renderHeader(){
+  const d=new Date(),h=d.getHours();
+  $("#hoje-txt").textContent=(h<6?"Boa noite":h<13?"Bom dia":h<20?"Boa tarde":"Boa noite")+" · "+DIAS_L[d.getDay()]+", "+d.getDate()+" de "+MESES_L[d.getMonth()];
+  if(!S.ready){$("#today-chips").innerHTML="";return;}
+  const chips=[];
+  const e=S.eggs.get(TODAY);
+  chips.push(e?`<button type="button" class="tchip good" data-tab="ovos"><span class="dot"></span>${+e.total||0} ovos hoje</button>`
+              :`<button type="button" class="tchip warn" data-tab="ovos"><span class="dot"></span>Recolha de hoje por registar</button>`);
+  const st=Math.max(0,stockInfo().stock);
+  chips.push(`<button type="button" class="tchip" data-tab="ven"><span class="dot"></span>${fmtN(st/12)} dúzias para vender</button>`);
+  let nx=null;
+  S.batches.filter(b=>b.estado!=="concluido").forEach(b=>{const dia=diaDe(b);marcos(b).forEach(m=>{const em=m.dia-dia;if(em>=0&&em<=3&&(!nx||em<nx.em))nx={m,em};});});
+  if(nx)chips.push(`<button type="button" class="tchip alert" data-tab="inc"><span class="dot"></span>${esc(nx.m.t)} ${nx.em===0?"hoje":nx.em===1?"amanhã":"em "+nx.em+" dias"}</button>`);
+  $("#today-chips").innerHTML=chips.join("");
+}
+
+/* ---------- vendas ---------- */
+function precos(){const p=S.cfg.precos||{};return {dz:p.duzia!=null?+p.duzia:3.6,mz:p.meia!=null?+p.meia:2};}
+function dzTxt(n){const d=Math.floor(n/12),r=n%12;return d+" dúzia"+(d===1?"":"s")+(r?" e "+r+" ovo"+(r===1?"":"s"):"");}
+function stockInfo(){
+  const ac=S.cfg.stock;
+  const usable=e=>Math.max(0,(+e.total||0)-(+e.partidos||0)-(+e.incubar||0));
+  const eggs=[...S.eggs.values()];
+  const after=ac?eggs.filter(e=>e.data>ac.data):eggs;
+  const entrou=after.reduce((a,e)=>a+usable(e),0);
+  const vendas=S.movs.filter(m=>m.tipo==="venda"&&m.categoria==="Ovos"&&+m.ovos>0&&(!ac||(m.criado?m.criado>ac.ts:m.data>ac.data)));
+  const stock=(ac?+ac.contagem||0:0)+entrou-vendas.reduce((a,m)=>a+(+m.ovos),0);
+  // oldest egg still in stock, assuming the oldest are sold first
+  let oldest=null,acc=0;
+  if(stock>0){const desc=eggs.slice().sort((a,b)=>a.data<b.data?1:-1);
+    for(const e of desc){acc+=usable(e);oldest=e.data;if(acc>=stock)break;}
+    if(ac&&acc<stock)oldest=ac.data;}
+  return {stock,oldest,ac};
+}
+function saleCalc(){const p=precos(),d=Math.max(0,+$("#s-dz").value||0),m=Math.max(0,+$("#s-mz").value||0);return {d,m,ovos:d*12+m*6,valor:Math.round((d*p.dz+m*p.mz)*100)/100};}
+let valorTocado=false;
+function updateSale(){
+  const c=saleCalc();if(!valorTocado)$("#s-valor").value=c.valor?c.valor.toFixed(2):"";
+  const v=+$("#s-valor").value||0;
+  $("#s-save").textContent=c.ovos?`Registar venda · ${dzTxt(c.ovos)} · ${eur(v)}`:"Escolhe a quantidade";
+  $("#s-save").disabled=!c.ovos;
+  const st=stockInfo().stock,w=$("#s-warn");
+  if(c.ovos>st){w.hidden=false;w.textContent=`Pelas contas só tens ${Math.max(0,st)} ovos. Se tiveres mais, acerta a contagem.`;}else w.hidden=true;
+}
+function renderVendas(){
+  const p=precos();
+  $("#pr-dz-txt").textContent=eur(p.dz)+" cada";$("#pr-mz-txt").textContent=eur(p.mz)+" cada";
+  const {stock,oldest,ac}=stockInfo();
+  const s=Math.max(0,stock),d=Math.floor(s/12),r=s%12;
+  $("#st-dz").textContent=d;$("#st-dz-u").textContent=d===1?"dúzia":"dúzias";
+  $("#st-sub").textContent=(r?"e "+r+" ovo"+(r===1?"":"s")+" soltos · ":"")+s+" ovos no total"+(ac?" · contagem de "+fmtShort(ac.data):"");
+  $("#st-carton").innerHTML=Array.from({length:12},(_,i)=>`<i class="${i<r||(!r&&d>0)?"on":""}"></i>`).join("");
+  const ag=$("#st-age");
+  if(stock<0)ag.innerHTML=`<span class="chip warn">Contas abaixo de zero</span> Vendeste mais do que o registado. Acerta a contagem.`;
+  else if(oldest){const age=diff(oldest,TODAY);
+    ag.innerHTML=age>21?`<span class="chip bad">${age} dias</span> Os mais antigos são de ${fmtShort(oldest)}: já passaram 21 dias da postura. Usa-os em casa em vez de os vender.`
+      :age>14?`<span class="chip warn">${age} dias</span> Os mais antigos são de ${fmtShort(oldest)}. Vende estes primeiro: o limite para venda são 21 dias depois da postura.`
+      :`<span class="chip good">${age} dias</span> Os mais antigos são de ${fmtShort(oldest)}. Estão frescos.`;}
+  else ag.textContent=S.ready?"Sem ovos em stock.":"";
+  if(document.activeElement&&document.activeElement.closest&&!document.activeElement.closest("#pr-form")){$("#pr-dz").value=p.dz.toFixed(2);$("#pr-mz").value=p.mz.toFixed(2);}
+  updateSale();
+  // semana: from Monday
+  const wd=(new Date(dnum(TODAY)*864e5).getUTCDay()+6)%7, mon=addDays(TODAY,-wd);
+  const vs=S.movs.filter(m=>m.tipo==="venda"&&m.categoria==="Ovos"&&m.data>=mon).sort((a,b)=>(a.data+(a.criado||""))<(b.data+(b.criado||""))?1:-1);
+  const ov=vs.reduce((a,m)=>a+(+m.ovos||0),0),val=vs.reduce((a,m)=>a+(+m.valor||0),0);
+  $("#wk-stats").innerHTML=`<div class="stat"><span class="v">${fmtN(ov/12)}</span><span class="k">dúzias vendidas</span></div><div class="stat"><span class="v">${eur(val)}</span><span class="k">recebido</span></div><div class="stat"><span class="v">${vs.length}</span><span class="k">vendas</span></div>`;
+  $("#wk-list").innerHTML=vs.length?vs.slice(0,12).map(m=>`<li><div><b>${dzTxt(+m.ovos||0)}</b>${m.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${fmtDay(m.data)}${m.criado?" · "+m.criado.slice(11,16):""}</div></div><span class="amt in">+${eur(+m.valor||0)}</span></li>`).join("")
+    :`<li style="grid-template-columns:1fr"><span class="muted">Ainda sem vendas desde segunda-feira.</span></li>`;
+}
+["s-dz","s-mz"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{valorTocado=false;updateSale();}));
+document.querySelectorAll('[data-step="s-dz"],[data-step="s-mz"]').forEach(b=>b.addEventListener("click",()=>{valorTocado=false;setTimeout(updateSale,0);}));
+$("#s-valor").addEventListener("input",()=>{valorTocado=true;updateSale();});
+$("#pr-btn").addEventListener("click",()=>{const f=$("#pr-form");f.hidden=!f.hidden;});
+$("#pr-save").addEventListener("click",async()=>{
+  const dz=+$("#pr-dz").value,mz=+$("#pr-mz").value;if(!(dz>0)||!(mz>0)){toast("Escreve os dois preços");return;}
+  const ok=await act(()=>store.setCfg("precos",{duzia:Math.round(dz*100)/100,meia:Math.round(mz*100)/100}),"Preços guardados");
+  if(ok){$("#pr-form").hidden=true;valorTocado=false;}
+});
+$("#ac-btn").addEventListener("click",()=>{$("#ac-form").hidden=false;$("#ac-n").value=Math.max(0,stockInfo().stock);$("#ac-n").focus();});
+$("#ac-cancel").addEventListener("click",()=>{$("#ac-form").hidden=true;});
+$("#ac-form").addEventListener("submit",async ev=>{ev.preventDefault();
+  const n=Math.max(0,+$("#ac-n").value||0);
+  const ok=await act(()=>store.setCfg("stock",{contagem:n,data:TODAY,ts:new Date().toISOString()}),"Contagem guardada");
+  if(ok)$("#ac-form").hidden=true;
+});
+$("#sale-form").addEventListener("submit",async ev=>{ev.preventDefault();
+  const c=saleCalc(),valor=Math.round((+$("#s-valor").value||0)*100)/100;if(!c.ovos)return;
+  const partes=[];if(c.d)partes.push(c.d+(c.d===1?" dúzia":" dúzias"));if(c.m)partes.push(c.m+(c.m===1?" meia dúzia":" meias dúzias"));
+  const doc={data:TODAY,tipo:"venda",categoria:"Ovos",valor,desc:partes.join(" + "),quantidade:c.ovos,unidade_in:"ovos",ovos:c.ovos,criado:new Date().toISOString()};
+  $("#s-save").disabled=true;
+  const ok=await act(()=>store.addMov(doc),"Venda registada · "+eur(valor));
+  if(ok){$("#s-dz").value=1;$("#s-mz").value=0;valorTocado=false;}
+  updateSale();
+});
+
+/* ---------- contas ---------- */
+const CATS={despesa:["Ração","Saúde e vacinas","Eletricidade","Cama e palha","Caixas e embalagens","Equipamento","Outros"],venda:["Ovos","Pintos","Galinhas","Outros"]};
+let movTipo="despesa", mesSel=TODAY.slice(0,7);
+function eur(v){return (Math.round(v*100)/100).toFixed(2).replace(".",",")+" €";}
+function shiftYM(ym,n){let y=+ym.slice(0,4),m=+ym.slice(5)+n;while(m<1){m+=12;y--;}while(m>12){m-=12;y++;}return y+"-"+String(m).padStart(2,"0");}
+function setTipo(t){
+  movTipo=t;
+  document.querySelectorAll("[data-tipo]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tipo===t?"true":"false"));
+  $("#m-cat").innerHTML=CATS[t].map(c=>`<option>${c}</option>`).join("");
+  $("#m-save").textContent=t==="despesa"?"Guardar despesa":"Guardar venda";
+  updateQtd();
+}
+function updateQtd(){
+  const c=$("#m-cat").value, show=movTipo==="venda"&&c!=="Outros";
+  $("#m-qtd-row").hidden=!show;
+  $("#m-unid-wrap").hidden=c!=="Ovos";
+  $("#m-qtd-lbl").textContent=c==="Ovos"?"Quantidade":c==="Pintos"?"N.º de pintos":"N.º de aves";
+}
+function renderContas(){
+  const ym=mesSel;
+  $("#m-titulo").textContent=MESES_L[+ym.slice(5)-1]+" "+ym.slice(0,4);
+  $("#m-next").disabled=ym>=TODAY.slice(0,7);
+  const ms=S.movs.filter(m=>(m.data||"").slice(0,7)===ym).sort((a,b)=>a.data<b.data?1:a.data>b.data?-1:0);
+  const desp=ms.filter(m=>m.tipo==="despesa").reduce((a,m)=>a+(+m.valor||0),0);
+  const vend=ms.filter(m=>m.tipo==="venda").reduce((a,m)=>a+(+m.valor||0),0);
+  const saldo=vend-desp;
+  $("#con-stats").innerHTML=
+    `<div class="stat"><span class="v">${eur(desp)}</span><span class="k">gastos</span></div>`+
+    `<div class="stat"><span class="v">${eur(vend)}</span><span class="k">vendas</span></div>`+
+    `<div class="stat"><span class="v ${saldo>0?"pos":saldo<0?"neg":""}">${saldo>0?"+":""}${eur(saldo)}</span><span class="k">saldo</span></div>`;
+  const eggsMes=[...S.eggs.values()].filter(e=>e.data.slice(0,7)===ym);
+  const aprov=eggsMes.reduce((a,e)=>a+Math.max(0,(+e.total||0)-(+e.partidos||0)),0);
+  const vo=ms.filter(m=>m.tipo==="venda"&&m.categoria==="Ovos"&&+m.ovos>0);
+  const voQ=vo.reduce((a,m)=>a+(+m.ovos),0), voV=vo.reduce((a,m)=>a+(+m.valor||0),0);
+  const custo=aprov>0?desp/aprov:null, preco=voQ>0?voV/voQ:null;
+  const marg=custo!=null&&preco!=null?preco-custo:null;
+  const c2=v=>v==null?"—":(Math.round(v*100)/100).toFixed(2).replace(".",",")+" €";
+  $("#con-unit").innerHTML=
+    `<div class="stat"><span class="v">${c2(custo)}</span><span class="k">custo por ovo</span></div>`+
+    `<div class="stat"><span class="v">${c2(preco)}</span><span class="k">preço de venda/ovo</span></div>`+
+    `<div class="stat"><span class="v ${marg>0?"pos":marg<0?"neg":""}">${marg==null?"—":(marg>0?"+":"")+c2(marg)}</span><span class="k">margem por ovo</span></div>`;
+  $("#con-hint").textContent=custo!=null
+    ?`Gastos do mês a dividir por ${aprov} ovos aproveitáveis. Cada dúzia custa-te ${eur(custo*12)}${preco!=null?" e vendes a "+eur(preco*12)+" a dúzia":""}.`
+    :"Regista a recolha de ovos e os gastos do mês para ver quanto te custa cada ovo.";
+  // categorias de despesa
+  const byCat={};ms.filter(m=>m.tipo==="despesa").forEach(m=>{byCat[m.categoria]=(byCat[m.categoria]||0)+(+m.valor||0);});
+  const cats=Object.entries(byCat).sort((a,b)=>b[1]-a[1]);
+  $("#con-cats").innerHTML=cats.length?cats.map(([c,v])=>`<div class="cat"><span>${esc(c)}</span><span class="amt">${eur(v)} <span class="muted">· ${Math.round(v/desp*100)}%</span></span><div class="bar"><i style="width:${(v/cats[0][1]*100).toFixed(1)}%"></i></div></div>`).join("")
+    :`<p class="muted">${S.ready?"Sem despesas registadas neste mês.":"A carregar…"}</p>`;
+  // lista
+  $("#movs").innerHTML=ms.length?ms.map(m=>{
+    const det=[];if(m.quantidade)det.push(m.categoria==="Ovos"?(m.unidade_in==="duzias"?m.quantidade+" dúzias":m.quantidade+" ovos"):m.quantidade+(m.categoria==="Pintos"?" pintos":" aves"));if(m.desc)det.push(esc(m.desc));
+    const conf=S.confirm==="mov:"+m.id;
+    return `<li style="grid-template-columns:1fr auto auto"><div style="min-width:0"><b>${esc(m.categoria)}</b>${m.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${fmtShort(m.data)}${det.length?" · "+det.join(" · "):""}</div></div>
+      <span class="amt ${m.tipo==="venda"?"in":""}">${m.tipo==="venda"?"+":"−"}${eur(+m.valor||0)}</span>
+      ${conf?`<span class="row"><button class="btn small danger" type="button" data-mov-yes="${m.id}">Apagar</button><button class="btn small ghost" type="button" data-mov-no>Não</button></span>`:`<button class="xbtn" type="button" data-mov-del="${m.id}" aria-label="Apagar registo">×</button>`}</li>`;
+  }).join(""):`<li style="grid-template-columns:1fr"><span class="muted">${S.ready?"Nada registado em "+MESES_L[+ym.slice(5)-1]+". Usa o formulário acima para juntar a primeira despesa ou venda.":"A carregar…"}</span></li>`;
+}
+setTipo("despesa");
+$("#m-data").value=TODAY;$("#m-data").max=TODAY;
+$("#m-cat").addEventListener("change",updateQtd);
+$("#mov-form").addEventListener("submit",async ev=>{
+  ev.preventDefault();
+  const valor=+String($("#m-valor").value).replace(",",".");
+  if(!(valor>0)){toast("Escreve um valor maior que zero");return;}
+  const cat=$("#m-cat").value, q=+$("#m-qtd").value||0, unid=$("#m-unid").value;
+  const doc={data:$("#m-data").value||TODAY,tipo:movTipo,categoria:cat,valor:Math.round(valor*100)/100,desc:$("#m-desc").value.trim(),criado:new Date().toISOString(),quantidade:null,ovos:null,unidade_in:null};
+  if(movTipo==="venda"&&cat!=="Outros"&&q>0){doc.quantidade=q;if(cat==="Ovos"){doc.unidade_in=unid;doc.ovos=unid==="duzias"?q*12:q;}}
+  const btn=$("#m-save");btn.disabled=true;
+  const ok=await act(()=>store.addMov(doc),movTipo==="despesa"?"Despesa guardada":"Venda guardada");
+  btn.disabled=false;
+  if(ok){$("#m-valor").value="";$("#m-qtd").value="";$("#m-desc").value="";mesSel=doc.data.slice(0,7);renderContas();}
+});
+function renderBanner(){
+  const b=$("#banner");
+  const hasEx=[...S.eggs.values()].some(e=>e.exemplo)||S.batches.some(x=>x.exemplo)||S.movs.some(x=>x.exemplo);
+  if(S.demo){b.hidden=false;b.innerHTML='<span>Pré-visualização com dados de exemplo. Nada do que mudares aqui fica guardado.</span>';return;}
+  if(STANDALONE&&renderBackup()&&S.confirm!=="ex"){b.hidden=false;b.innerHTML='<span>Há registos sem cópia de segurança recente.</span><button class="btn small" type="button" data-tab="res">Guardar cópia</button>';return;}
+  if(hasEx){
+    if(S.confirm==="ex"){b.hidden=false;b.innerHTML='<span>Apagar todos os registos marcados como exemplo?</span><span class="row"><button class="btn small danger" id="ex-yes" type="button">Apagar</button><button class="btn small ghost" id="ex-no" type="button">Manter</button></span>';return;}
+    b.hidden=false;b.innerHTML='<span>Há registos de exemplo para veres como funciona.</span><button class="btn small" id="ex-del" type="button">Apagar exemplos</button>';return;
+  }
+  b.hidden=true;b.innerHTML="";
+}
+function renderAgenda(){
+  const items=[];
+  S.batches.filter(b=>b.estado!=="concluido").forEach(b=>{
+    const dia=diaDe(b);
+    marcos(b).forEach(m=>{const em=m.dia-dia;if(em>=0&&em<=3)items.push({b,m,em});});
+  });
+  items.sort((a,c)=>a.em-c.em);
+  $("#agenda-panel").hidden=!items.length;
+  $("#agenda").innerHTML=items.map(i=>`<div class="ag ${i.em===0?"today":""}"><span class="when">${i.em===0?"hoje":i.em===1?"amanhã":"em "+i.em+" dias"}</span><div><b>${esc(i.m.t)} · ${esc(i.b.nome)}</b><small>Dia ${i.m.dia}. ${esc(i.m.d)}</small></div></div>`).join("");
+}
+function renderChart(){
+  const days=[];for(let i=13;i>=0;i--)days.push(addDays(TODAY,-i));
+  const vals=days.map(d=>S.eggs.has(d)?(+S.eggs.get(d).total||0):null);
+  const known=vals.filter(v=>v!=null);
+  const max=Math.max(4,...known);
+  const top=Math.ceil(max/4)*4;
+  const W=340,H=150,L=22,R=4,T=16,B=22,cw=(W-L-R)/14,bw=cw*0.62;
+  const y=v=>T+(H-T-B)*(1-v/top);
+  let g="";
+  [0,top/2,top].forEach(t=>{g+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-width="1"/><text x="${L-5}" y="${y(t)+3.5}" text-anchor="end" font-size="9" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${t}</text>`;});
+  days.forEach((d,i)=>{
+    const x=L+i*cw+(cw-bw)/2,v=vals[i],isT=d===TODAY;
+    if(v!=null){const yy=y(v);g+=`<rect x="${x}" y="${yy}" width="${bw}" height="${Math.max(0,y(0)-yy)}" rx="3" fill="${isT?"var(--yolk)":"var(--bar)"}"/>`;
+      g+=`<text x="${x+bw/2}" y="${yy-4}" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="IBM Plex Mono, monospace">${v}</text>`;}
+    else g+=`<rect x="${x}" y="${y(0)-2}" width="${bw}" height="2" fill="var(--line)"/>`;
+    g+=`<text x="${x+bw/2}" y="${H-6}" text-anchor="middle" font-size="9" fill="${isT?"var(--ink)":"var(--muted)"}" font-weight="${isT?700:400}" font-family="IBM Plex Mono, monospace">${+d.slice(8)}</text>`;
+  });
+  $("#chart").innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ovos recolhidos por dia nos últimos 14 dias">${g}</svg>`;
+  const tot=known.reduce((a,b)=>a+b,0);
+  const week=days.slice(7).map((d,i)=>vals[i+7]).filter(v=>v!=null);
+  $("#stats14").innerHTML=
+    `<div class="stat"><span class="v">${tot}</span><span class="k">total 14 dias</span></div>`+
+    `<div class="stat"><span class="v">${known.length?(tot/known.length).toFixed(1).replace(".",","):"—"}</span><span class="k">média por dia</span></div>`+
+    `<div class="stat"><span class="v">${week.reduce((a,b)=>a+b,0)}</span><span class="k">últimos 7 dias</span></div>`;
+}
+function renderDays(){
+  const list=[...S.eggs.values()].sort((a,b)=>a.data<b.data?1:-1).slice(0,30);
+  if(!list.length){$("#days").innerHTML=`<li style="grid-template-columns:1fr"><span class="muted">${S.ready?"Ainda sem registos. Usa os botões acima para registar a recolha de hoje.":"A carregar…"}</span></li>`;return;}
+  $("#days").innerHTML=list.map(e=>{
+    const meta=[];if(+e.partidos)meta.push(e.partidos+" partidos");if(+e.incubar)meta.push(e.incubar+" p/ chocar");
+    return `<li><button type="button" data-edit-day="${e.data}"><b>${fmtDay(e.data)}</b>${e.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${meta.join(" · ")||"&nbsp;"}</div></button><span class="num" style="font-size:1.3rem">${+e.total||0}</span></li>`;
+  }).join("");
+}
+function batchCard(b){
+  const D=(ESPECIES[b.especie]||ESPECIES.galinha).dias;
+  const dia=diaDe(b), concl=b.estado==="concluido";
+  const ms=marcos(b), nx=proximo(b);
+  const pos=Math.max(0,Math.min(1,dia/D));
+  let next="";
+  if(!concl){
+    if(dia<0)next=`Entra na incubadora a <b>${fmtShort(b.inicio)}</b>.`;
+    else if(nx){const em=nx.dia-dia;next=`<b>${esc(nx.t)}</b> ${em===0?"hoje":em===1?"amanhã":"em "+em+" dias"} <span class="muted">· dia ${nx.dia}, ${fmtShort(addDays(b.inicio,nx.dia))}</span>`;}
+    else next=`<b>Passou o dia ${D}.</b> Regista quantos nasceram e conclui o lote.`;
+  }
+  const leit=(b.leituras||[]).slice().sort((a,c)=>(a.data+a.hora)<(c.data+c.hora)?1:-1);
+  const last=leit[0];
+  let lastChip="";
+  if(last&&!concl){const p=avaliar(b,last);lastChip=p.length?`<span class="chip warn">${esc(p.join(", "))}</span>`:`<span class="chip good">leitura OK</span>`;}
+  const fert=b.ferteis!=null&&b.ferteis!==""?+b.ferteis:null, nasc=b.nascidos!=null&&b.nascidos!==""?+b.nascidos:null;
+  const isOpen=S.open.has(b.id);
+  const conf=S.confirm;
+  return `<article class="panel batch" data-id="${b.id}">
+    <div class="spread"><div><h3>${esc(b.nome)}</h3><p class="muted" style="font-size:.88rem">${esc((ESPECIES[b.especie]||ESPECIES.galinha).n)} · ${+b.ovos} ovos · desde ${fmtShort(b.inicio)}${b.origem?" · "+esc(b.origem):""}</p></div>
+      <span class="row">${b.exemplo?'<span class="chip ex">exemplo</span>':""}${concl?'<span class="chip">concluído</span>':lastChip}</span></div>
+    ${concl?`<div class="stats">
+        <div class="stat"><span class="v">${nasc??"—"}</span><span class="k">nascidos de ${+b.ovos}</span></div>
+        <div class="stat"><span class="v">${fert!=null?pct(fert,+b.ovos):"—"}</span><span class="k">fertilidade</span></div>
+        <div class="stat"><span class="v">${fert!=null&&nasc!=null?pct(nasc,fert):"—"}</span><span class="k">eclosão</span></div></div>`
+      :`<div class="day">${dia<0?"—":"Dia "+Math.min(dia,99)}<small> de ${D}</small></div>
+    <div class="track" aria-hidden="true"><div class="rail"><div class="fill" style="width:${pos*100}%"></div></div>
+      ${ms.map(m=>`<div class="mk ${dia>=m.dia?"done":""}" style="left:${m.dia/D*100}%"><span>${m.dia}</span></div>`).join("")}</div>
+    <p class="next">${next}</p>`}
+    <details class="more" ${isOpen?"open":""} data-det="${b.id}"><summary>${concl?"Detalhes":"Registar e gerir"}</summary><div class="inner">
+      ${concl?"":`<form class="row" data-reading="${b.id}" autocomplete="off" style="align-items:flex-end">
+        <label class="field"><span>Temp. °C</span><input type="number" step="0.1" inputmode="decimal" name="temp" placeholder="37,5"></label>
+        <label class="field"><span>Humidade %</span><input type="number" step="1" inputmode="numeric" name="hum" placeholder="${fase(b,dia)==="eclosao"?"68":"50"}"></label>
+        <button class="btn" type="submit">Registar leitura</button></form>
+      <p class="hint">Faixa de referência ${fase(b,dia)==="eclosao"?"na fase final":"agora"}: 37,2–37,8 °C e ${fase(b,dia)==="eclosao"?"65–75":"45–55"}% de humidade.</p>`}
+      ${leit.length?`<div class="tablewrap"><table class="readings"><thead><tr><th>Quando</th><th>Temp.</th><th>Hum.</th><th></th></tr></thead><tbody>${leit.slice(0,6).map(r=>{const p=avaliar(b,r);return `<tr><td>${fmtShort(r.data)} ${esc(r.hora||"")}</td><td class="n">${r.temp!==""&&r.temp!=null?String(r.temp).replace(".",",")+"°":"—"}</td><td class="n">${r.hum!==""&&r.hum!=null?r.hum+"%":"—"}</td><td>${p.length?`<span class="chip warn">${esc(p[0])}</span>`:""}</td></tr>`;}).join("")}</tbody></table></div>`:`<p class="hint">Sem leituras de temperatura e humidade.</p>`}
+      <div class="row" style="align-items:flex-end">
+        <label class="field"><span>Férteis (ovoscopia)</span><input type="number" min="0" inputmode="numeric" data-field="ferteis" value="${fert??""}"></label>
+        <label class="field"><span>Nascidos</span><input type="number" min="0" inputmode="numeric" data-field="nascidos" value="${nasc??""}"></label>
+        <button class="btn" type="button" data-save-counts="${b.id}">Guardar</button>
+      </div>
+      <div class="row">
+        ${concl?`<button class="btn small" type="button" data-reopen="${b.id}">Reabrir lote</button>`:`<button class="btn small" type="button" data-finish="${b.id}">Concluir lote</button>`}
+        ${conf==="del:"+b.id?`<span class="confirm">Apagar este lote? <button class="btn small danger" type="button" data-del-yes="${b.id}">Apagar</button><button class="btn small ghost" type="button" data-del-no>Manter</button></span>`:`<button class="btn small danger" type="button" data-del="${b.id}">Apagar lote</button>`}
+      </div>
+    </div></details>
+  </article>`;
+}
+function renderBatches(){
+  const act=S.batches.filter(b=>b.estado!=="concluido").sort((a,b)=>a.inicio<b.inicio?1:-1);
+  const done=S.batches.filter(b=>b.estado==="concluido").sort((a,b)=>a.inicio<b.inicio?1:-1);
+  $("#batches").innerHTML=act.length?act.map(batchCard).join(""):
+    `<div class="panel empty"><svg viewBox="0 0 56 56" aria-hidden="true"><ellipse cx="28" cy="31" rx="15" ry="19" fill="none" stroke="var(--muted)" stroke-width="2"/><path d="M20 28l4 3 4-4 4 4 4-3" fill="none" stroke="var(--yolk)" stroke-width="2"/></svg><h3>${S.ready?"Nenhum lote a chocar":"A carregar…"}</h3><p class="muted">Cria um lote quando puseres ovos na incubadora. A app conta os dias e avisa-te da ovoscopia, do dia de parar a viragem e da eclosão.</p></div>`;
+  $("#done-wrap").hidden=!done.length;
+  $("#batches-done").innerHTML=done.map(batchCard).join("");
+}
+/* ---------- resumo: aggregation + charts ---------- */
+let resN=12, selMes=TODAY.slice(0,7);
+function monthsBack(n){const a=[];for(let i=n-1;i>=0;i--)a.push(shiftYM(TODAY.slice(0,7),-i));return a;}
+function mLbl(ym){return MESES[+ym.slice(5)-1];}
+function mLong(ym){return MESES_L[+ym.slice(5)-1]+" "+ym.slice(0,4);}
+function agg(ym){
+  const es=[...S.eggs.values()].filter(e=>e.data.slice(0,7)===ym);
+  const ovos=es.reduce((a,e)=>a+(+e.total||0),0), part=es.reduce((a,e)=>a+(+e.partidos||0),0), incub=es.reduce((a,e)=>a+(+e.incubar||0),0);
+  const aprov=Math.max(0,ovos-part);
+  const ms=S.movs.filter(m=>(m.data||"").slice(0,7)===ym);
+  const catsG={},catsV={};let gastos=0,vendas=0,ovVend=0,vOvos=0;
+  ms.forEach(m=>{const v=+m.valor||0;if(m.tipo==="despesa"){gastos+=v;catsG[m.categoria]=(catsG[m.categoria]||0)+v;}else{vendas+=v;catsV[m.categoria]=(catsV[m.categoria]||0)+v;if(m.categoria==="Ovos"&&+m.ovos>0){ovVend+=+m.ovos;vOvos+=v;}}});
+  return {ym,dias:es.length,ovos,part,incub,aprov,gastos,vendas,saldo:vendas-gastos,catsG,catsV,ovVend,
+    custoDz:aprov>0&&gastos>0?gastos/aprov*12:null, precoDz:ovVend>0?vOvos/ovVend*12:null};
+}
+function niceMax(v){if(!(v>0))return 1;const p=Math.pow(10,Math.floor(Math.log10(v))),f=v/p;return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p;}
+const fmtN=v=>(Math.round(v*100)/100).toLocaleString("pt-PT",{maximumFractionDigits:2});
+const CH={W:360,H:190,L:42,R:10,T:14,B:24};
+function frame(n,top,fmtTick,months){
+  const {W,H,L,R,T,B}=CH, cw=(W-L-R)/n, y=v=>T+(H-T-B)*(1-v/top);
+  let g="";
+  months.forEach((m,i)=>{if(m===selMes)g+=`<rect x="${L+i*cw}" y="${T-6}" width="${cw}" height="${H-T-B+6}" rx="6" fill="var(--sunk)"/>`;});
+  for(let k=0;k<=4;k++){const t=top*k/4;g+=`<line x1="${L}" x2="${W-R}" y1="${y(t)}" y2="${y(t)}" stroke="var(--line)" stroke-width="1"${k?' stroke-dasharray="2 3"':""}/><text x="${L-6}" y="${y(t)+3.5}" text-anchor="end" font-size="9" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${fmtTick(t)}</text>`;}
+  months.forEach((m,i)=>{const cx=L+i*cw+cw/2;g+=`<text x="${cx}" y="${H-7}" text-anchor="middle" font-size="9" fill="${m===selMes?"var(--ink)":"var(--muted)"}" font-weight="${m===selMes?700:400}" font-family="IBM Plex Mono, monospace">${mLbl(m)}</text>`;});
+  return {g,cw,y};
+}
+function hits(months,cw){const {L,T,H,B}=CH;return months.map((m,i)=>`<rect class="hit" data-m="${m}" x="${L+i*cw}" y="${T-6}" width="${cw}" height="${H-T-B+22}" fill="transparent"/>`).join("");}
+function svgWrap(inner,label){return `<svg viewBox="0 0 ${CH.W} ${CH.H}" role="img" aria-label="${label}">${inner}</svg>`;}
+function barTop(x,yTop,w,yBase,fill){const h=Math.max(0,yBase-yTop);if(h<0.5)return "";const r=Math.min(4,h,w/2);
+  return `<path d="M${x},${yBase}V${yTop+r}Q${x},${yTop} ${x+r},${yTop}H${x+w-r}Q${x+w},${yTop} ${x+w},${yTop+r}V${yBase}Z" fill="${fill}"/>`;}
+function chartMoney(A){
+  const months=A.map(a=>a.ym),top=niceMax(Math.max(...A.map(a=>Math.max(a.gastos,a.vendas)),10));
+  const {g,cw,y}=frame(A.length,top,t=>Math.round(t)+" €",months);
+  const bw=Math.min(14,cw*0.32);let b="";
+  A.forEach((a,i)=>{const cx=CH.L+i*cw+cw/2;
+    b+=barTop(cx-bw-1,y(a.gastos),bw,y(0),"var(--s-gasto)")+barTop(cx+1,y(a.vendas),bw,y(0),"var(--s-venda)");});
+  return svgWrap(g+b+hits(months,cw),"Gastos e vendas por mês");
+}
+function chartEggs(A){
+  const months=A.map(a=>a.ym),top=niceMax(Math.max(...A.map(a=>a.ovos),10));
+  const {g,cw,y}=frame(A.length,top,t=>String(Math.round(t)),months);
+  const bw=Math.min(22,cw*0.56);let b="";
+  A.forEach((a,i)=>{const x=CH.L+i*cw+(cw-bw)/2;
+    if(a.ovos<=0)return;
+    const yA=y(a.aprov), yT=y(a.ovos);
+    // aproveitáveis from baseline, partidos stacked on top with a 2px surface gap
+    if(a.part>0){b+=`<rect x="${x}" y="${yA}" width="${bw}" height="${Math.max(0,y(0)-yA)}" fill="var(--s-ovo)"/>`;
+      b+=barTop(x,yT,bw,yA-2,"var(--s-ovo2)");}
+    else b+=barTop(x,yA,bw,y(0),"var(--s-ovo)");
+    if(a.ym===selMes)b+=`<text x="${x+bw/2}" y="${yT-5}" text-anchor="middle" font-size="9.5" font-weight="700" fill="var(--ink)" font-family="IBM Plex Mono, monospace">${a.ovos}</text>`;});
+  return svgWrap(g+b+hits(months,cw),"Ovos recolhidos por mês");
+}
+function chartDz(A){
+  const months=A.map(a=>a.ym);
+  const vals=A.flatMap(a=>[a.custoDz,a.precoDz]).filter(v=>v!=null);
+  const top=niceMax(Math.max(...vals,1));
+  const {g,cw,y}=frame(A.length,top,t=>fmtN(t)+" €",months);
+  const X=i=>CH.L+i*cw+cw/2;
+  function series(key,col){
+    let p="",d="",pen=false,last=null;
+    A.forEach((a,i)=>{const v=a[key];if(v==null){pen=false;return;}d+=(pen?"L":"M")+X(i)+","+y(v);pen=true;last={i,v};
+      p+=`<circle cx="${X(i)}" cy="${y(v)}" r="${a.ym===selMes?5:4}" fill="${col}" stroke="var(--surface)" stroke-width="2"/>`;});
+    return {svg:`<path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/>`+p,last};
+  }
+  const c=series("custoDz","var(--s-gasto)"),pr=series("precoDz","var(--s-venda)");
+  let lbl="";
+  [[c.last,"custo"],[pr.last,"preço"]].forEach(([l,t],k)=>{if(!l)return;const ly=y(l.v)+(k===0?14:-9);lbl+=`<text x="${Math.min(X(l.i),CH.W-CH.R-2)}" y="${ly}" text-anchor="end" font-size="9" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${t} ${fmtN(l.v)} €</text>`;});
+  if(!vals.length)lbl+=`<text x="${CH.W/2}" y="${CH.H/2}" text-anchor="middle" font-size="11" fill="var(--muted)">Sem dados suficientes ainda</text>`;
+  return svgWrap(g+c.svg+pr.svg+lbl+hits(months,cw),"Custo e preço de venda por dúzia");
+}
+function tipHTML(a){
+  const r=(c,k,v)=>`<div><span><span class="sw" style="background:${c}"></span>${k}</span><span class="amt">${v}</span></div>`;
+  return `<b>${mLong(a.ym)}</b>`+r("var(--s-gasto)","Gastos",eur(a.gastos))+r("var(--s-venda)","Vendas",eur(a.vendas))+
+    `<div><span>Saldo</span><span class="amt">${a.saldo>0?"+":""}${eur(a.saldo)}</span></div>`+
+    r("var(--s-ovo)","Ovos",a.ovos+(a.part?` (${a.part} partidos)`:""))+
+    `<div><span>Custo/dúzia</span><span class="amt">${a.custoDz!=null?eur(a.custoDz):"—"}</span></div>`+
+    `<div><span>Preço/dúzia</span><span class="amt">${a.precoDz!=null?eur(a.precoDz):"—"}</span></div>`;
+}
+function renderDetail(a){
+  const kv=o=>{const e=Object.entries(o).sort((x,y)=>y[1]-x[1]);return e.length?e.map(([k,v])=>`<div><span>${esc(k)}</span><span class="amt">${eur(v)}</span></div>`).join(""):`<div><span class="muted">Nada registado</span><span></span></div>`;};
+  $("#res-detail").innerHTML=`<div class="spread"><h2>Detalhe de ${mLong(a.ym)}</h2><span class="muted" style="font-size:.85rem">toca num mês dos gráficos para mudar</span></div>
+   <div class="stats">
+     <div class="stat"><span class="v">${a.ovos}</span><span class="k">ovos (${a.dias} dias registados)</span></div>
+     <div class="stat"><span class="v">${a.dias?(a.ovos/a.dias).toFixed(1).replace(".",","):"—"}</span><span class="k">média por dia</span></div>
+     <div class="stat"><span class="v">${a.ovos?Math.round(a.part/a.ovos*100)+"%":"—"}</span><span class="k">partidos ou sujos</span></div>
+   </div>
+   <div class="stats">
+     <div class="stat"><span class="v">${a.ovVend}</span><span class="k">ovos vendidos</span></div>
+     <div class="stat"><span class="v">${a.incub}</span><span class="k">guardados p/ chocar</span></div>
+     <div class="stat"><span class="v ${a.saldo>0?"pos":a.saldo<0?"neg":""}">${a.saldo>0?"+":""}${eur(a.saldo)}</span><span class="k">saldo do mês</span></div>
+   </div>
+   <div class="detail-grid">
+     <div class="kv"><p class="label">Gastos · ${eur(a.gastos)}</p>${kv(a.catsG)}</div>
+     <div class="kv"><p class="label">Vendas · ${eur(a.vendas)}</p>${kv(a.catsV)}</div>
+   </div>`;
+}
+function renderResumo(){
+  document.querySelectorAll("[data-res-n]").forEach(b=>b.setAttribute("aria-pressed",+b.dataset.resN===resN?"true":"false"));
+  const months=monthsBack(resN);if(!months.includes(selMes))selMes=months[months.length-1];
+  const A=months.map(agg);
+  const tot=A.reduce((s,a)=>({ovos:s.ovos+a.ovos,aprov:s.aprov+a.aprov,g:s.g+a.gastos,v:s.v+a.vendas}),{ovos:0,aprov:0,g:0,v:0});
+  const saldo=tot.v-tot.g;
+  $("#res-periodo").textContent="De "+mLong(months[0])+" a "+mLong(months[months.length-1]);
+  $("#res-hero").innerHTML=
+    `<div class="stat"><span class="v">${tot.ovos}</span><span class="k">ovos recolhidos</span></div>`+
+    `<div class="stat"><span class="v ${saldo>0?"pos":saldo<0?"neg":""}">${saldo>0?"+":""}${eur(saldo)}</span><span class="k">saldo do período</span></div>`+
+    `<div class="stat"><span class="v">${tot.aprov&&tot.g?eur(tot.g/tot.aprov*12):"—"}</span><span class="k">custo médio/dúzia</span></div>`;
+  $("#ch-money").innerHTML=chartMoney(A);
+  $("#ch-eggs").innerHTML=chartEggs(A);
+  $("#ch-dz").innerHTML=chartDz(A);
+  renderDetail(A.find(a=>a.ym===selMes)||A[A.length-1]);
+  $("#res-table").innerHTML=`<thead><tr><th>Mês</th><th>Ovos</th><th>Gastos</th><th>Vendas</th><th>Saldo</th><th>Custo/dz</th></tr></thead><tbody>`+
+    A.slice().reverse().map(a=>`<tr class="${a.ym===selMes?"sel":""}"><td><button type="button" data-sel-mes="${a.ym}">${mLbl(a.ym)} ${a.ym.slice(2,4)}</button></td><td class="n">${a.ovos||"—"}</td><td class="n">${a.gastos?fmtN(a.gastos):"—"}</td><td class="n">${a.vendas?fmtN(a.vendas):"—"}</td><td class="n">${a.gastos||a.vendas?(a.saldo>0?"+":"")+fmtN(a.saldo):"—"}</td><td class="n">${a.custoDz!=null?fmtN(a.custoDz):"—"}</td></tr>`).join("")+
+    `<tr><td><b>Total</b></td><td class="n"><b>${tot.ovos}</b></td><td class="n"><b>${fmtN(tot.g)}</b></td><td class="n"><b>${fmtN(tot.v)}</b></td><td class="n"><b>${(saldo>0?"+":"")+fmtN(saldo)}</b></td><td class="n"><b>${tot.aprov&&tot.g?fmtN(tot.g/tot.aprov*12):"—"}</b></td></tr></tbody>`;
+  renderRates();
+}
+/* ---------- Excel export ---------- */
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+async function loadExcelJS(){
+  if(window.ExcelJS)return window.ExcelJS;
+  try{await loadScript("https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js");}catch(e){}
+  if(!window.ExcelJS)await loadScript("https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js");
+  return window.ExcelJS;
+}
+const XL={green:"FF2F4A2A",yolk:"FFF6D58A",band:"FFF3F5EE",line:"FFD9DDD0",eur:'#,##0.00 "€"',date:"dd/mm/yyyy"};
+function xlDate(iso){const p=iso.split("-").map(Number);return new Date(Date.UTC(p[0],p[1]-1,p[2]));}
+function xlSheet(wb,name,title,sub,cols){
+  const ws=wb.addWorksheet(name,{views:[{state:"frozen",ySplit:4}],properties:{defaultRowHeight:18}});
+  ws.columns=cols.map(c=>({key:c.k,width:c.w}));
+  ws.mergeCells(1,1,1,cols.length);ws.getCell(1,1).value=title;ws.getCell(1,1).font={bold:true,size:15,color:{argb:XL.green}};
+  ws.mergeCells(2,1,2,cols.length);ws.getCell(2,1).value=sub;ws.getCell(2,1).font={italic:true,size:10,color:{argb:"FF66705C"}};
+  const h=ws.getRow(4);h.values=cols.map(c=>c.h);h.height=22;
+  h.eachCell(c=>{c.font={bold:true,color:{argb:"FFFFFFFF"}};c.fill={type:"pattern",pattern:"solid",fgColor:{argb:XL.green}};c.alignment={vertical:"middle",horizontal:"center",wrapText:true};});
+  cols.forEach((c,i)=>{if(c.f)ws.getColumn(i+1).numFmt=c.f;});
+  return ws;
+}
+function xlRows(ws,rows,nCols){
+  rows.forEach((r,i)=>{const row=ws.addRow(r);if(i%2)for(let c=1;c<=nCols;c++)row.getCell(c).fill={type:"pattern",pattern:"solid",fgColor:{argb:XL.band}};
+    for(let c=1;c<=nCols;c++)row.getCell(c).border={bottom:{style:"hair",color:{argb:XL.line}}};});
+}
+function xlTotal(ws,label,sumCols,nCols,firstRow,lastRow){
+  const row=ws.addRow([]);row.getCell(1).value=label;
+  sumCols.forEach(c=>{const L=ws.getColumn(c).letter;row.getCell(c).value=lastRow>=firstRow?{formula:`SUM(${L}${firstRow}:${L}${lastRow})`}:0;});
+  for(let c=1;c<=nCols;c++){const cell=row.getCell(c);cell.font={bold:true};cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:XL.yolk}};cell.border={top:{style:"thin",color:{argb:XL.green}}};}
+  return row;
+}
+async function buildWorkbook(){
+  const ExcelJS=await loadExcelJS();
+  const wb=new ExcelJS.Workbook();wb.creator="Meu Galinheiro";wb.created=new Date();
+  const gerado="Gerado a "+fmtShort(TODAY)+" "+TODAY.slice(0,4);
+  // 1. Resumo mensal (all months with any data, plus current)
+  const set=new Set([TODAY.slice(0,7)]);S.eggs.forEach(e=>set.add(e.data.slice(0,7)));S.movs.forEach(m=>m.data&&set.add(m.data.slice(0,7)));
+  const months=[...set].sort();
+  let ws=xlSheet(wb,"Resumo mensal","Resumo mensal",gerado+" · valores em euros",[
+    {k:"m",h:"Mês",w:16},{k:"o",h:"Ovos recolhidos",w:12},{k:"p",h:"Partidos ou sujos",w:12},{k:"a",h:"Aproveitáveis",w:13},{k:"v",h:"Ovos vendidos",w:12},
+    {k:"g",h:"Gastos",w:12,f:XL.eur},{k:"vd",h:"Vendas",w:12,f:XL.eur},{k:"s",h:"Saldo",w:12,f:XL.eur},{k:"cd",h:"Custo por dúzia",w:13,f:XL.eur},{k:"pd",h:"Preço médio por dúzia",w:14,f:XL.eur}]);
+  const first=5;
+  xlRows(ws,months.map((ym,i)=>{const a=agg(ym),r=first+i;
+    return [mLong(ym),a.ovos,a.part,{formula:`B${r}-C${r}`},a.ovVend,a.gastos,a.vendas,{formula:`G${r}-F${r}`},{formula:`IF(D${r}>0,F${r}/D${r}*12,"")`},a.precoDz!=null?Math.round(a.precoDz*100)/100:""];}),10);
+  const last=first+months.length-1;
+  const tr=xlTotal(ws,"Total",[2,3,4,5,6,7,8],10,first,last);
+  tr.getCell(9).value={formula:`IF(D${tr.number}>0,F${tr.number}/D${tr.number}*12,"")`};
+  ws.autoFilter={from:"A4",to:"J4"};
+  // 2. Ovos
+  const eggs=[...S.eggs.values()].sort((a,b)=>a.data<b.data?-1:1);
+  ws=xlSheet(wb,"Recolha de ovos","Recolha diária de ovos",gerado,[
+    {k:"d",h:"Data",w:13,f:XL.date},{k:"t",h:"Recolhidos",w:12},{k:"p",h:"Partidos ou sujos",w:13},{k:"i",h:"Para chocar",w:12},{k:"a",h:"Aproveitáveis",w:13}]);
+  xlRows(ws,eggs.map((e,i)=>{const r=5+i;return [xlDate(e.data),+e.total||0,+e.partidos||0,+e.incubar||0,{formula:`B${r}-C${r}`}];}),5);
+  xlTotal(ws,"Total",[2,3,4,5],5,5,4+eggs.length);ws.autoFilter={from:"A4",to:"E4"};
+  // 3. Movimentos
+  const movs=S.movs.slice().sort((a,b)=>a.data<b.data?-1:1);
+  ws=xlSheet(wb,"Gastos e vendas","Gastos e vendas",gerado+" · usa os filtros do cabeçalho para ver só um tipo ou categoria",[
+    {k:"d",h:"Data",w:13,f:XL.date},{k:"t",h:"Tipo",w:10},{k:"c",h:"Categoria",w:17},{k:"n",h:"Nota",w:28},{k:"q",h:"Quantidade",w:14},{k:"o",h:"Ovos",w:9},{k:"g",h:"Gasto",w:12,f:XL.eur},{k:"v",h:"Venda",w:12,f:XL.eur}]);
+  xlRows(ws,movs.map(m=>{const q=m.quantidade?(m.categoria==="Ovos"?(m.unidade_in==="duzias"?m.quantidade+" dúzias":m.quantidade+" ovos"):m.quantidade+(m.categoria==="Pintos"?" pintos":" aves")):"";
+    return [xlDate(m.data),m.tipo==="despesa"?"Gasto":"Venda",m.categoria,m.desc||"",q,m.ovos||"",m.tipo==="despesa"?+m.valor:"",m.tipo==="venda"?+m.valor:""];}),8);
+  xlTotal(ws,"Total",[6,7,8],8,5,4+movs.length);ws.autoFilter={from:"A4",to:"H4"};
+  // 4. Gastos por categoria × mês
+  const cats=CATS.despesa;
+  ws=xlSheet(wb,"Gastos por categoria","Gastos por categoria e mês",gerado,[{k:"c",h:"Categoria",w:18}].concat(months.map(m=>({k:m,h:mLbl(m)+" "+m.slice(2,4),w:11,f:XL.eur})),[{k:"t",h:"Total",w:12,f:XL.eur}]));
+  const nC=months.length+2;
+  xlRows(ws,cats.map((c,i)=>{const r=5+i;const row=[c].concat(months.map(m=>agg(m).catsG[c]||0));const L1=ws.getColumn(2).letter,L2=ws.getColumn(months.length+1).letter;row.push({formula:`SUM(${L1}${r}:${L2}${r})`});return row;}),nC);
+  xlTotal(ws,"Total",Array.from({length:months.length+1},(_,i)=>i+2),nC,5,4+cats.length);
+  // 5. Incubadora
+  const bs=S.batches.slice().sort((a,b)=>a.inicio<b.inicio?-1:1);
+  ws=xlSheet(wb,"Incubadora","Lotes da incubadora",gerado+" · fertilidade = férteis ÷ ovos; eclosão = nascidos ÷ férteis",[
+    {k:"n",h:"Lote",w:20},{k:"e",h:"Ave",w:10},{k:"i",h:"Entrada",w:12,f:XL.date},{k:"p",h:"Eclosão prevista",w:13,f:XL.date},{k:"o",h:"Ovos",w:8},{k:"f",h:"Férteis",w:9},{k:"na",h:"Nascidos",w:10},{k:"fe",h:"Fertilidade",w:11,f:"0%"},{k:"ec",h:"Eclosão",w:10,f:"0%"},{k:"es",h:"Estado",w:11},{k:"or",h:"Origem",w:26}]);
+  xlRows(ws,bs.map((b,i)=>{const r=5+i,D=(ESPECIES[b.especie]||ESPECIES.galinha).dias;const f=b.ferteis!=null&&b.ferteis!==""?+b.ferteis:"",n=b.nascidos!=null&&b.nascidos!==""?+b.nascidos:"";
+    return [b.nome,(ESPECIES[b.especie]||ESPECIES.galinha).n,xlDate(b.inicio),xlDate(addDays(b.inicio,D)),+b.ovos,f,n,{formula:`IF(AND(ISNUMBER(F${r}),E${r}>0),F${r}/E${r},"")`},{formula:`IF(AND(ISNUMBER(G${r}),ISNUMBER(F${r}),F${r}>0),G${r}/F${r},"")`},b.estado==="concluido"?"Concluído":"A chocar",b.origem||""];}),11);
+  // 6. Leituras
+  const leit=[];bs.forEach(b=>(b.leituras||[]).forEach(r=>leit.push([b.nome,xlDate(r.data),r.hora||"",r.temp??"",r.hum??"",avaliar(b,r).join(", ")||"OK"])));
+  ws=xlSheet(wb,"Leituras","Temperatura e humidade da incubadora",gerado+" · referência: 37,2–37,8 °C; humidade 45–55% (65–75% nos últimos 3 dias)",[
+    {k:"l",h:"Lote",w:20},{k:"d",h:"Data",w:12,f:XL.date},{k:"h",h:"Hora",w:8},{k:"t",h:"Temp. °C",w:10,f:"0.0"},{k:"u",h:"Humidade %",w:11},{k:"a",h:"Avaliação",w:20}]);
+  xlRows(ws,leit,6);
+  return wb.xlsx.writeBuffer();
+}
+$("#xlsx-btn").addEventListener("click",async()=>{
+  const btn=$("#xlsx-btn"),hint=$("#xlsx-hint");
+  btn.disabled=true;btn.textContent="A preparar o ficheiro…";hint.hidden=true;
+  try{
+    const buf=await buildWorkbook();
+    await saveFile("meu-galinheiro-"+TODAY+".xlsx",new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
+    toast("Ficheiro Excel guardado");
+  }catch(e){
+    if(e&&e.code==="declined"){}
+    else if(e&&e.code==="unavailable"){hint.textContent="A exportação não está disponível nesta vista.";hint.hidden=false;}
+    else if(e&&e.code==="rate_limited")toast("Espera um momento e tenta de novo");
+    else{hint.textContent="Não foi possível criar o ficheiro Excel. Verifica a rede e tenta de novo.";hint.hidden=false;}
+  }finally{btn.disabled=false;btn.textContent="Exportar para Excel";}
+});
+
+/* chart hover + select */
+const tip=$("#tip");
+document.addEventListener("pointermove",ev=>{
+  const h=ev.target.closest&&ev.target.closest(".hit");
+  if(!h||ev.pointerType==="touch"){tip.hidden=true;return;}
+  tip.innerHTML=tipHTML(agg(h.dataset.m));tip.hidden=false;
+  const r=tip.getBoundingClientRect(),pad=12;
+  let x=ev.clientX+pad,y=ev.clientY+pad;
+  if(x+r.width>innerWidth-8)x=ev.clientX-r.width-pad;
+  if(y+r.height>innerHeight-8)y=ev.clientY-r.height-pad;
+  tip.style.left=Math.max(8,x)+"px";tip.style.top=Math.max(8,y)+"px";
+});
+document.addEventListener("click",ev=>{
+  const h=ev.target.closest&&(ev.target.closest(".hit")||ev.target.closest("[data-sel-mes]"));
+  const r=ev.target.closest&&ev.target.closest("[data-res-n]");
+  if(r){resN=+r.dataset.resN;renderResumo();return;}
+  if(!h)return;
+  selMes=h.dataset.m||h.dataset.selMes;renderResumo();
+  if(h.dataset.selMes)$("#res-detail").scrollIntoView({behavior:"smooth",block:"start"});
+});
+function renderRates(){
+  const bs=S.batches.slice().sort((a,b)=>a.inicio<b.inicio?1:-1);
+  if(!bs.length){$("#rates").innerHTML=`<tbody><tr><td class="muted" style="text-align:left">Os resultados aparecem quando tiveres lotes na incubadora.</td></tr></tbody>`;return;}
+  let tO=0,tF=0,tN=0,tFN=0;
+  const rows=bs.map(b=>{const o=+b.ovos,f=b.ferteis!=null&&b.ferteis!==""?+b.ferteis:null,n=b.nascidos!=null&&b.nascidos!==""?+b.nascidos:null;
+    if(f!=null){tO+=o;tF+=f;} if(f!=null&&n!=null){tN+=n;tFN+=f;}
+    return `<tr><td>${esc(b.nome)}<div class="muted" style="font-size:.8rem">${fmtShort(b.inicio)}${b.estado==="concluido"?"":" · a chocar"}</div></td><td class="n">${o}</td><td class="n">${f!=null?pct(f,o):"—"}</td><td class="n">${n??"—"}</td><td class="n">${f!=null&&n!=null?pct(n,f):"—"}</td></tr>`;}).join("");
+  $("#rates").innerHTML=`<thead><tr><th>Lote</th><th>Ovos</th><th>Fertil.</th><th>Nasc.</th><th>Ecl.</th></tr></thead><tbody>${rows}<tr><td><b>Média</b></td><td></td><td class="n"><b>${pct(tF,tO)}</b></td><td></td><td class="n"><b>${pct(tN,tFN)}</b></td></tr></tbody>`;
+}
+
+/* ---------- egg form ---------- */
+let eggDirty=false;
+function loadEggForm(){
+  const d=$("#egg-date").value||TODAY, e=S.eggs.get(d);
+  $("#egg-total").value=e?+e.total||0:0;$("#egg-partidos").value=e?+e.partidos||0:0;$("#egg-incubar").value=e?+e.incubar||0:0;
+  $("#egg-save").textContent=e?"Atualizar recolha":"Guardar recolha";eggDirty=false;
+}
+$("#egg-date").value=TODAY;$("#egg-date").max=TODAY;
+$("#egg-date").addEventListener("change",loadEggForm);
+document.querySelectorAll("[data-step]").forEach(btn=>btn.addEventListener("click",()=>{
+  const inp=document.getElementById(btn.dataset.step);inp.value=Math.max(0,(+inp.value||0)+(+btn.dataset.d));eggDirty=true;
+}));
+["egg-total","egg-partidos","egg-incubar"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{eggDirty=true;}));
+$("#egg-form").addEventListener("submit",async ev=>{
+  ev.preventDefault();
+  const data=$("#egg-date").value||TODAY;
+  const doc={data,total:Math.max(0,+$("#egg-total").value||0),partidos:Math.max(0,+$("#egg-partidos").value||0),incubar:Math.max(0,+$("#egg-incubar").value||0)};
+  const btn=$("#egg-save");btn.disabled=true;
+  await act(()=>store.setEgg(data,doc),"Recolha de "+fmtShort(data)+" guardada");
+  btn.disabled=false;eggDirty=false;
+});
+
+/* ---------- batch form ---------- */
+$("#new-batch-btn").addEventListener("click",()=>{$("#batch-form").hidden=false;$("#b-inicio").value=TODAY;$("#b-nome").focus();});
+$("#batch-cancel").addEventListener("click",()=>{$("#batch-form").hidden=true;});
+$("#batch-form").addEventListener("submit",async ev=>{
+  ev.preventDefault();
+  const b={nome:$("#b-nome").value.trim()||"Lote",especie:$("#b-especie").value,inicio:$("#b-inicio").value||TODAY,ovos:Math.max(1,+$("#b-ovos").value||1),origem:$("#b-origem").value.trim(),ferteis:null,nascidos:null,estado:"ativo",leituras:[],criado:new Date().toISOString()};
+  const ok=await act(()=>store.addBatch(b),"Lote criado");
+  if(ok){$("#batch-form").reset();$("#batch-form").hidden=true;}
+});
+
+/* ---------- delegated actions ---------- */
+document.addEventListener("toggle",ev=>{const d=ev.target;if(d.dataset&&d.dataset.det){d.open?S.open.add(d.dataset.det):S.open.delete(d.dataset.det);}},true);
+document.addEventListener("submit",async ev=>{
+  const f=ev.target;if(!f.dataset.reading)return;ev.preventDefault();
+  const b=S.batches.find(x=>x.id===f.dataset.reading);if(!b)return;
+  const temp=f.temp.value,hum=f.hum.value;if(temp===""&&hum===""){toast("Escreve a temperatura ou a humidade");return;}
+  const now=new Date();const r={data:TODAY,hora:String(now.getHours()).padStart(2,"0")+":"+String(now.getMinutes()).padStart(2,"0"),temp:temp===""?null:+temp,hum:hum===""?null:+hum};
+  const leituras=(b.leituras||[]).concat([r]).slice(-200);
+  const p=avaliar(b,r);
+  await act(()=>store.updateBatch(b.id,{leituras}),p.length?"Atenção: "+p.join(", "):"Leitura registada");
+});
+document.addEventListener("click",async ev=>{
+  const t=ev.target.closest("button");if(!t)return;
+  if(t.dataset.tab){showTab(t.dataset.tab);return;}
+  if(t.dataset.tipo){setTipo(t.dataset.tipo);return;}
+  if(t.id==="m-prev"){mesSel=shiftYM(mesSel,-1);renderContas();return;}
+  if(t.id==="m-next"){mesSel=shiftYM(mesSel,1);renderContas();return;}
+  if(t.dataset.movDel){S.confirm="mov:"+t.dataset.movDel;renderContas();return;}
+  if(t.hasAttribute("data-mov-no")){S.confirm=null;renderContas();return;}
+  if(t.dataset.movYes){S.confirm=null;await act(()=>store.deleteMov(t.dataset.movYes),"Registo apagado");return;}
+  if(t.dataset.editDay){$("#egg-date").value=t.dataset.editDay;loadEggForm();showTab("ovos");$("#egg-form").scrollIntoView({behavior:"smooth",block:"start"});return;}
+  if(t.id==="ex-del"){S.confirm="ex";renderBanner();return;}
+  if(t.id==="ex-no"){S.confirm=null;renderBanner();return;}
+  if(t.id==="ex-yes"){S.confirm=null;await act(()=>store.deleteExamples(),"Exemplos apagados");return;}
+  if(t.dataset.saveCounts){
+    const card=t.closest("[data-id]");const f=card.querySelector('[data-field="ferteis"]').value,n=card.querySelector('[data-field="nascidos"]').value;
+    await act(()=>store.updateBatch(t.dataset.saveCounts,{ferteis:f===""?null:Math.max(0,+f),nascidos:n===""?null:Math.max(0,+n)}),"Guardado");return;}
+  if(t.dataset.finish){
+    const card=t.closest("[data-id]");const f=card.querySelector('[data-field="ferteis"]').value,n=card.querySelector('[data-field="nascidos"]').value;
+    const patch={estado:"concluido"};if(f!=="")patch.ferteis=Math.max(0,+f);if(n!=="")patch.nascidos=Math.max(0,+n);
+    S.open.delete(t.dataset.finish);await act(()=>store.updateBatch(t.dataset.finish,patch),"Lote concluído");return;}
+  if(t.dataset.reopen){await act(()=>store.updateBatch(t.dataset.reopen,{estado:"ativo"}),"Lote reaberto");return;}
+  if(t.dataset.del){S.confirm="del:"+t.dataset.del;renderBatches();return;}
+  if(t.hasAttribute("data-del-no")){S.confirm=null;renderBatches();return;}
+  if(t.dataset.delYes){S.confirm=null;S.open.delete(t.dataset.delYes);await act(()=>store.deleteBatch(t.dataset.delYes),"Lote apagado");return;}
+});
+function showTab(name){
+  ["ovos","inc","ven","con","res"].forEach(n=>{$("#tab-"+n).hidden=n!==name;});
+  document.querySelectorAll("nav.tabs button").forEach(b=>b.dataset.tab===name?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current"));
+  try{sessionStorage.setItem("gal-tab",name);}catch(e){}
+  window.scrollTo(0,0);
+}
+
+/* ---------- toast + action wrapper ---------- */
+let toastT=null;
+function toast(msg){const el=$("#toast");el.textContent=msg;el.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{el.hidden=true;},2600);}
+async function act(fn,okMsg){
+  try{await fn();toast(okMsg);return true;}
+  catch(e){
+    if(e&&e.code==="unavailable"){try{await new Promise(r=>setTimeout(r,600+Math.random()*600));await fn();toast(okMsg);return true;}catch(e2){}}
+    toast(e&&e.code==="invalid_argument"?"Sem permissão para gravar aqui":e&&e.code==="quota_exceeded"?"Espaço cheio: apaga registos antigos":"Não foi possível gravar. Verifica a rede e tenta de novo.");
+    return false;
+  }
+}
+
+/* ---------- stores ---------- */
+function dbStore(db){
+  const eggs=db.collection("eggs"), batches=db.collection("batches"), movs=db.collection("movimentos");
+  return {
+    addMov:m=>movs.add(m),
+    deleteMov:id=>movs.doc(id).delete(),
+    setCfg:(id,o)=>db.collection("config").doc(id).set(o),
+    setEgg:(d,doc)=>eggs.doc(d).set(doc),
+    addBatch:b=>batches.add(b),
+    updateBatch:(id,p)=>batches.doc(id).update(p),
+    deleteBatch:id=>batches.doc(id).delete(),
+    deleteExamples:async()=>{
+      for(const e of [...S.eggs.values()].filter(x=>x.exemplo))await eggs.doc(e.data).delete();
+      for(const b of S.batches.filter(x=>x.exemplo))await batches.doc(b.id).delete();
+      for(const m of S.movs.filter(x=>x.exemplo))await movs.doc(m.id).delete();
+    },
+    subscribe(){
+      db.collection("config").onSnapshot(snap=>{const c={};snap.docs.forEach(d=>{c[d.id]=d.data();});S.cfg=c;render();},()=>{});
+      movs.orderBy("data","desc").limit(1000).onSnapshot(snap=>{
+        S.movs=snap.docs.map(d=>Object.assign({},d.data(),{id:d.id}));S.ready=true;render();
+      },err=>{toast("Ligação perdida às contas. Recarrega a página.");});
+      eggs.orderBy("data","desc").limit(400).onSnapshot(snap=>{
+        S.eggs=new Map(snap.docs.map(d=>{const v=d.data();return [v.data||d.id,Object.assign({data:d.id},v)];}));
+        S.ready=true;render();if(!eggDirty)loadEggForm();
+      },err=>{toast("Ligação perdida aos registos. Recarrega a página.");});
+      batches.onSnapshot(snap=>{
+        S.batches=snap.docs.map(d=>Object.assign({},d.data(),{id:d.id}));S.ready=true;render();
+      },err=>{toast("Ligação perdida aos lotes. Recarrega a página.");});
+    }
+  };
+}
+function demoStore(){
+  // Example data generated relative to today, only for the preview when storage is unavailable
+  const r=[10,9,11,8,10,12,9,11,10,7,10,11,9];
+  r.forEach((v,i)=>{const d=addDays(TODAY,-(i+1));S.eggs.set(d,{data:d,total:v,partidos:i%4===0?1:0,incubar:i===5?6:0,exemplo:true});});
+  const ini=addDays(TODAY,-17);
+  S.batches=[
+    {id:"ex1",nome:"Lote pedreses",especie:"galinha",inicio:ini,ovos:24,origem:"galo pedrês × poedeiras",ferteis:21,nascidos:null,estado:"ativo",exemplo:true,
+     leituras:[{data:addDays(TODAY,-2),hora:"08:10",temp:37.5,hum:52},{data:addDays(TODAY,-1),hora:"08:05",temp:37.6,hum:50},{data:TODAY,hora:"07:55",temp:37.9,hum:48}]},
+    {id:"ex2",nome:"Lote de setembro",especie:"galinha",inicio:addDays(TODAY,-54),ovos:18,origem:"",ferteis:16,nascidos:13,estado:"concluido",exemplo:true,leituras:[]}
+  ];
+  const mv=(n,tipo,categoria,valor,extra)=>Object.assign({id:"m"+n,data:addDays(TODAY,-n),tipo,categoria,valor,desc:"",quantidade:null,ovos:null,unidade_in:null,exemplo:true},extra||{});
+  S.movs=[mv(11,"despesa","Ração",32.5,{desc:"2 sacos de 25 kg"}),mv(12,"despesa","Eletricidade",6,{desc:"incubadora, estimativa"}),mv(9,"despesa","Saúde e vacinas",8.5),mv(4,"despesa","Ração",16.25,{desc:"1 saco de 25 kg"}),mv(6,"despesa","Cama e palha",5),
+    mv(8,"venda","Ovos",21.6,{quantidade:6,unidade_in:"duzias",ovos:72,desc:"vizinhos"}),mv(5,"venda","Pintos",15,{quantidade:5}),mv(2,"venda","Ovos",14.4,{quantidade:4,unidade_in:"duzias",ovos:48})];
+  S.ready=true;S.demo=true;
+  const local={
+    addMov:async m=>{S.movs.push(Object.assign({},m,{id:"l"+Date.now()}));render();},
+    setCfg:async(id,o)=>{S.cfg[id]=o;render();},
+    deleteMov:async id=>{S.movs=S.movs.filter(x=>x.id!==id);render();},
+    setEgg:async(d,doc)=>{S.eggs.set(d,doc);render();},
+    addBatch:async b=>{S.batches.push(Object.assign({},b,{id:"l"+Date.now()}));render();},
+    updateBatch:async(id,p)=>{const b=S.batches.find(x=>x.id===id);if(b)Object.assign(b,p);render();},
+    deleteBatch:async id=>{S.batches=S.batches.filter(x=>x.id!==id);render();},
+    deleteExamples:async()=>{for(const[k,v]of S.eggs)if(v.exemplo)S.eggs.delete(k);S.batches=S.batches.filter(x=>!x.exemplo);S.movs=S.movs.filter(x=>!x.exemplo);render();},
+    subscribe(){}
+  };
+  return local;
+}
+
+/* Standalone (GitHub Pages / installed on the phone): data lives in this device's browser storage */
+const STANDALONE=!!window.GALINHEIRO_STANDALONE;
+const LS_KEY="meu-galinheiro-v1";
+function lsStore(){
+  let d=null;try{d=JSON.parse(localStorage.getItem(LS_KEY)||"null");}catch(e){d=null;}
+  const blank=()=>({eggs:{},batches:[],movs:[],cfg:{}});
+  d=Object.assign(blank(),d||{});
+  const load=()=>{S.eggs=new Map(Object.entries(d.eggs));S.batches=d.batches;S.movs=d.movs;S.cfg=d.cfg;};
+  const save=()=>{try{localStorage.setItem(LS_KEY,JSON.stringify(d));}catch(e){load();render();throw {code:"quota_exceeded"};}load();render();};
+  const nid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+  load();S.ready=true;
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist();}catch(e){}
+  return {
+    setEgg:async(k,doc)=>{d.eggs[k]=doc;save();},
+    addBatch:async b=>{d.batches.push(Object.assign({},b,{id:nid()}));save();},
+    updateBatch:async(i,p)=>{const b=d.batches.find(x=>x.id===i);if(b)Object.assign(b,p);save();},
+    deleteBatch:async i=>{d.batches=d.batches.filter(x=>x.id!==i);save();},
+    addMov:async m=>{d.movs.push(Object.assign({},m,{id:nid()}));save();},
+    deleteMov:async i=>{d.movs=d.movs.filter(x=>x.id!==i);save();},
+    setCfg:async(k,o)=>{d.cfg[k]=o;save();},
+    deleteExamples:async()=>{for(const k of Object.keys(d.eggs))if(d.eggs[k].exemplo)delete d.eggs[k];d.batches=d.batches.filter(x=>!x.exemplo);d.movs=d.movs.filter(x=>!x.exemplo);save();},
+    exportData:()=>JSON.stringify({app:"meu-galinheiro",versao:1,exportado:new Date().toISOString(),dados:{eggs:d.eggs,batches:d.batches,movs:d.movs,cfg:Object.assign({},d.cfg,{backup:undefined})}}),
+    markBackup:()=>{d.cfg.backup={ts:new Date().toISOString()};save();},
+    importData:async txt=>{
+      const j=JSON.parse(txt),x=j&&j.dados;
+      if(!x||typeof x.eggs!=="object"||!Array.isArray(x.batches)||!Array.isArray(x.movs))throw {code:"bad_file"};
+      d={eggs:x.eggs,batches:x.batches,movs:x.movs,cfg:Object.assign({},x.cfg||{},{backup:{ts:new Date().toISOString()}})};save();
+    },
+    subscribe(){}
+  };
+}
+async function saveFile(name,blob){
+  if(STANDALONE){
+    const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);return;
+  }
+  const dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;
+  if(!dl)throw {code:"unavailable"};
+  await dl.save({filename:name,data:blob});
+}
+function renderBackup(){
+  if(!STANDALONE)return;
+  $("#backup-panel").hidden=false;
+  const b=S.cfg.backup;
+  const has=S.eggs.size||S.movs.length||S.batches.length;
+  const age=b?diff(b.ts.slice(0,10),TODAY):null;
+  $("#backup-txt").textContent=(b?`Última cópia: ${fmtShort(b.ts.slice(0,10))} (há ${age} dia${age===1?"":"s"}). `:"Ainda não guardaste nenhuma cópia. ")+
+    "Os teus registos ficam só neste aparelho. Guarda uma cópia de vez em quando (no Drive, no e-mail) para não os perderes se mudares de telemóvel ou limpares o browser.";
+  return has&&(!b||age>=14);
+}
+$("#bk-save").addEventListener("click",async()=>{
+  try{const name="meu-galinheiro-copia-"+TODAY+".json";await saveFile(name,new Blob([store.exportData()],{type:"application/json"}));store.markBackup();toast("Cópia guardada");}
+  catch(e){toast("Não foi possível guardar a cópia");}
+});
+let pendingImport=null;
+$("#bk-file").addEventListener("change",async ev=>{
+  const f=ev.target.files&&ev.target.files[0];ev.target.value="";if(!f)return;
+  pendingImport=await f.text();
+  const c=$("#bk-confirm");c.hidden=false;
+  c.innerHTML=`<span>Restaurar substitui todos os registos deste aparelho pelos da cópia «${esc(f.name)}».</span><button class="btn small danger" type="button" id="bk-yes">Restaurar</button><button class="btn small ghost" type="button" id="bk-no">Cancelar</button>`;
+});
+document.addEventListener("click",async ev=>{
+  if(ev.target.id==="bk-no"){pendingImport=null;$("#bk-confirm").hidden=true;}
+  if(ev.target.id==="bk-yes"){
+    $("#bk-confirm").hidden=true;
+    try{await store.importData(pendingImport);toast("Cópia restaurada");}
+    catch(e){toast(e&&e.code==="bad_file"?"Este ficheiro não é uma cópia do Meu Galinheiro":"Não foi possível restaurar a cópia");}
+    pendingImport=null;
+  }
+});
+
+/* ---------- boot ---------- */
+try{const t=sessionStorage.getItem("gal-tab");if(t)showTab(t);}catch(e){}
+render();loadEggForm();
+(async()=>{
+  if(STANDALONE){
+    store=lsStore();
+    if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){try{navigator.serviceWorker.register("sw.js");}catch(e){}}
+  }else{
+    let db=null;
+    try{db=window.claude&&window.claude.use?await window.claude.use("db"):null;}catch(e){db=null;}
+    store=db?dbStore(db):demoStore();
+  }
+  store.subscribe();render();loadEggForm();
+})();
+})();
+</script>
+
+</body>
+</html>
