@@ -26,14 +26,17 @@
 html,body{background:var(--bg);color:var(--ink)}
 body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(84px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px;padding-block:20px}
+.stack{display:flex;flex-direction:column;gap:20px;min-width:0}
+.sectitle{font-size:1.3rem}
 h1,h2,h3{font-family:var(--f-display);margin:0;text-wrap:balance;letter-spacing:-.01em}
 h1{font-size:1.75rem;font-weight:800}
-h2{font-size:1.2rem;font-weight:600}
+h2{font-size:1.15rem;font-weight:600}
 h3{font-size:1.05rem;font-weight:600}
 p{margin:0}
 .num{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
-.label{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.label{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.sub{font-size:.85rem;color:var(--muted)}
 header.top{display:flex;flex-direction:column;gap:14px;padding-top:4px}
 .brand{display:flex;align-items:center;gap:14px}
 .mark{width:54px;height:54px;flex:none}
@@ -53,14 +56,18 @@ header.top{display:flex;flex-direction:column;gap:14px;padding-top:4px}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:3px solid var(--yolk);outline-offset:2px}
-.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:10px 14px;font-weight:700}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 16px;border:1px solid var(--line);background:var(--surface);border-radius:10px;font-weight:700;line-height:1.2;text-align:center}
+.btn.block{width:100%;min-height:50px;font-size:1.02rem}
 .btn.primary{background:var(--yolk);border-color:var(--yolk);color:var(--yolk-ink)}
 .btn.ghost{background:transparent}
 .btn.danger{color:var(--bad);border-color:var(--bad);background:transparent}
-.btn.small{padding:6px 10px;font-size:.88rem}
+.btn.small{min-height:34px;padding:0 12px;font-size:.88rem}
 .btn:disabled{opacity:.5;cursor:default}
-input[type=date],input[type=number],input[type=text],select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0;width:100%}
-.field{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 140px}
+input[type=date],input[type=number],input[type=text],select{background:var(--bg);border:1px solid var(--line);border-radius:10px;height:44px;padding:0 12px;min-width:0;width:100%}
+input.w-auto{width:auto}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.row > .field{flex:1 1 140px}
+.row.end{align-items:flex-end}
 .field span{font-size:.85rem;color:var(--muted);font-weight:700}
 
 /* egg steppers */
@@ -68,12 +75,11 @@ input[type=date],input[type=number],input[type=text],select{background:var(--bg)
 .stepper{display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
 .stepper:first-child{border-top:0}
 .stepper .ctrl{display:flex;align-items:center;gap:6px}
-.stepper button{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:1.5rem;line-height:1;font-weight:700}
-.stepper input{width:64px;text-align:center;font-family:var(--f-num);font-size:1.4rem;padding:8px 4px;-moz-appearance:textfield}
+.stepper button{width:44px;height:44px;flex:none;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--line);background:var(--bg);font-size:1.4rem;line-height:1;font-weight:700;padding:0}
+.stepper input{width:64px;height:44px;text-align:center;font-family:var(--f-num);font-size:1.3rem;padding:0 4px;-moz-appearance:textfield}
 .stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
 .stepper .lbl b{display:block}
 .stepper .lbl small{color:var(--muted);font-size:.85rem}
-.stepper.main input{font-size:1.9rem;width:84px;border-color:var(--yolk)}
 
 /* agenda */
 .agenda{display:flex;flex-direction:column;gap:8px}
@@ -87,13 +93,14 @@ input[type=date],input[type=number],input[type=text],select{background:var(--bg)
 .chart svg{width:100%;height:auto;display:block}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:end}
 .stat{display:flex;flex-direction:column;gap:4px;min-width:0}
-.stat .k{order:-1;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);line-height:1.25}
-.stat .v{font-family:var(--f-display);font-weight:700;font-size:1.55rem;line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stat .k{order:-1;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);line-height:1.25}
+.stat .v{font-family:var(--f-display);font-weight:700;font-size:clamp(1.05rem,4.4vw,1.5rem);line-height:1.1;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* list of days */
 .days{list-style:none;margin:0;padding:0}
 .days li{display:grid;grid-template-columns:1fr auto;gap:8px;padding:10px 0;border-top:1px solid var(--line);align-items:center}
 .days li:first-child{border-top:0}
+.days li.li-empty{grid-template-columns:1fr}
 .days .meta{font-size:.85rem;color:var(--muted)}
 .days button{background:none;border:0;text-align:left;padding:0;min-width:0}
 
@@ -123,14 +130,15 @@ details.more[open] summary::after{content:"−"}
 .inner{display:flex;flex-direction:column;gap:16px;padding-top:14px}
 .readings{width:100%;border-collapse:collapse;font-size:.9rem}
 .readings td,.readings th{padding:6px 4px;border-top:1px solid var(--line);text-align:left}
-.readings th{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-top:0}
+.readings th{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-top:0}
 .readings td.n{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 .hint{font-size:.85rem;color:var(--muted)}
 .confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:.9rem}
 
-table.rates{width:100%;border-collapse:collapse;font-size:.92rem}
-table.rates th,table.rates td{padding:8px 6px;border-top:1px solid var(--line);text-align:right}
-table.rates th:first-child,table.rates td:first-child{text-align:left}
+table.rates{width:100%;border-collapse:collapse;font-size:.88rem}
+table.rates th,table.rates td{padding:8px 5px;border-top:1px solid var(--line);text-align:right;white-space:nowrap}
+table.rates td .sub{white-space:normal}
+table.rates th:first-child,table.rates td:first-child,table.rates td.l{text-align:left}
 table.rates th{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;border-top:0}
 table.rates td.n{font-family:var(--f-num);font-variant-numeric:tabular-nums}
 .tablewrap{overflow-x:auto}
@@ -145,33 +153,32 @@ nav.tabs button{border:0;background:transparent;padding:8px 2px;border-radius:10
 .stockbig{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .stockbig .n{font-family:var(--f-display);font-weight:800;font-size:3rem;line-height:1}
 .stockbig .u{font-size:1.1rem;font-weight:700}
-.carton{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;max-width:180px}
+.carton{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;width:132px;flex:none}
 .carton i{aspect-ratio:4/5;border-radius:50% 50% 46% 46% / 58% 58% 42% 42%;background:var(--sunk);border:1px solid var(--line);max-width:100%}
 .carton i.on{background:var(--yolk);border-color:var(--yolk)}
-.totalbtn{font-size:1.05rem;padding:14px}
 nav.tabs button svg{width:24px;height:24px}
 nav.tabs button[aria-current="page"]{color:var(--ink);background:var(--sunk)}
 nav.tabs button[aria-current="page"] svg .acc{fill:var(--yolk)}
 
 /* contas */
 .seg{display:inline-flex;background:var(--sunk);border-radius:10px;padding:3px;gap:2px}
-.seg button{border:0;background:transparent;padding:7px 14px;border-radius:8px;font-weight:700;color:var(--muted)}
+.seg button{border:0;background:transparent;min-height:38px;padding:0 14px;border-radius:8px;font-weight:700;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
 .monthnav{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:8px}
-.monthnav h2{text-align:center;font-size:1.4rem}
-.monthnav .btn{width:44px;height:44px;padding:0;font-size:1.3rem}
+.monthnav h2{text-align:center}
+.monthnav .btn{width:44px;padding:0;font-size:1.3rem}
 .v.pos{color:var(--good)} .v.neg{color:var(--bad)}
 .unit{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}
 .cats{display:flex;flex-direction:column;gap:10px}
 .cat{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:.92rem}
 .cat .bar{grid-column:1 / -1;height:8px;border-radius:999px;background:var(--sunk);overflow:hidden}
 .cat .bar i{display:block;height:100%;background:var(--yolk);border-radius:999px}
-.amt{font-family:var(--f-num);font-variant-numeric:tabular-nums;white-space:nowrap}
+.amt{font-family:var(--f-num);font-size:1rem;font-variant-numeric:tabular-nums;white-space:nowrap}
 .amt.in{color:var(--good)}
-.xbtn{border:0;background:none;color:var(--muted);font-size:1.2rem;width:36px;height:36px;border-radius:8px}
+.xbtn{border:0;background:none;color:var(--muted);font-size:1.2rem;width:34px;height:34px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center}
 .xbtn:hover{background:var(--sunk)}
 /* resumo charts */
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.82rem;color:var(--muted)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.85rem;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
 .chart .hit{cursor:pointer}
@@ -198,10 +205,10 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
       <svg class="mark" viewBox="0 0 52 52" aria-hidden="true">
         <rect width="52" height="52" rx="15" fill="var(--yolk)"/>
         <path d="M17.5 19.5c-.6-5.2 3.4-7.3 5.6-3.6c1.3-5 6.6-4.6 6.7.2c3.3-3 7-.3 5.2 4z" fill="var(--comb)"/>
-        <circle cx="26" cy="29" r="12.5" fill="var(--surface)"/>
+        <circle cx="26" cy="29" r="12.5" fill="#FFFDF7"/>
         <path d="M37.6 26.4l7.4 3.2-7.4 3.1z" fill="var(--beak)"/>
         <path d="M35.5 33.5c2.6.4 3.6 3.2 2.3 5.4c-1.6 1.8-4.2.4-3.9-2.1z" fill="var(--comb)"/>
-        <circle cx="31" cy="26" r="2.1" fill="var(--ink)"/>
+        <circle cx="31" cy="26" r="2.1" fill="#1E2318"/>
       </svg>
       <div class="brandtxt"><h1>Meu Galinheiro</h1><p class="greet" id="hoje-txt"></p></div>
     </div>
@@ -210,7 +217,7 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
   <div class="banner" id="banner" hidden></div>
 
   <!-- OVOS -->
-  <section id="tab-ovos" class="wrap" style="padding:0">
+  <section id="tab-ovos" class="stack">
     <div class="panel" id="agenda-panel" hidden>
       <h2>Na incubadora</h2>
       <div class="agenda" id="agenda"></div>
@@ -219,21 +226,21 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
     <form class="panel" id="egg-form" autocomplete="off">
       <div class="spread">
         <h2>Recolha de ovos</h2>
-        <input type="date" id="egg-date" style="width:auto" aria-label="Dia da recolha">
+        <input type="date" id="egg-date" class="w-auto" aria-label="Dia da recolha">
       </div>
       <div class="steppers">
-        <div class="stepper main"><div class="lbl"><b>Recolhidos</b><small>Todos os ovos do dia</small></div>
+        <div class="stepper"><div class="lbl"><b>Recolhidos</b><small>Todos os ovos do dia</small></div>
           <div class="ctrl"><button type="button" data-step="egg-total" data-d="-1" aria-label="Menos um">−</button><input type="number" id="egg-total" min="0" inputmode="numeric" value="0"><button type="button" data-step="egg-total" data-d="1" aria-label="Mais um">+</button></div></div>
         <div class="stepper"><div class="lbl"><b>Partidos ou sujos</b><small>Não aproveitáveis</small></div>
           <div class="ctrl"><button type="button" data-step="egg-partidos" data-d="-1" aria-label="Menos um">−</button><input type="number" id="egg-partidos" min="0" inputmode="numeric" value="0"><button type="button" data-step="egg-partidos" data-d="1" aria-label="Mais um">+</button></div></div>
         <div class="stepper"><div class="lbl"><b>Guardados para chocar</b><small>Separados para a incubadora</small></div>
           <div class="ctrl"><button type="button" data-step="egg-incubar" data-d="-1" aria-label="Menos um">−</button><input type="number" id="egg-incubar" min="0" inputmode="numeric" value="0"><button type="button" data-step="egg-incubar" data-d="1" aria-label="Mais um">+</button></div></div>
       </div>
-      <button class="btn primary" type="submit" id="egg-save">Guardar recolha</button>
+      <button class="btn primary block" type="submit" id="egg-save">Guardar recolha</button>
     </form>
 
     <div class="panel chart">
-      <div class="spread"><h2>Últimos 14 dias</h2><span class="muted" style="font-size:.85rem">ovos recolhidos</span></div>
+      <div class="spread"><h2>Últimos 14 dias</h2><span class="sub">ovos recolhidos</span></div>
       <div id="chart"></div>
       <div class="stats" id="stats14"></div>
     </div>
@@ -245,8 +252,8 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
   </section>
 
   <!-- INCUBADORA -->
-  <section id="tab-inc" class="wrap" style="padding:0" hidden>
-    <div class="spread"><h2 style="font-size:1.4rem">Lotes</h2><button class="btn primary" id="new-batch-btn" type="button">Novo lote</button></div>
+  <section id="tab-inc" class="stack" hidden>
+    <div class="spread"><h2 class="sectitle">Lotes</h2><button class="btn primary" id="new-batch-btn" type="button">Novo lote</button></div>
     <form class="panel" id="batch-form" hidden autocomplete="off">
       <h3>Novo lote na incubadora</h3>
       <div class="row">
@@ -265,23 +272,23 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
       <label class="field"><span>Origem (opcional)</span><input type="text" id="b-origem" placeholder="Ex.: galo pedrês × galinhas brancas"></label>
       <div class="row"><button class="btn primary" type="submit">Criar lote</button><button class="btn ghost" type="button" id="batch-cancel">Cancelar</button></div>
     </form>
-    <div id="batches" class="wrap" style="padding:0"></div>
-    <div id="done-wrap" class="wrap" style="padding:0" hidden>
-      <h2 style="font-size:1.1rem" class="muted">Lotes concluídos</h2>
-      <div id="batches-done" class="wrap" style="padding:0"></div>
+    <div id="batches" class="stack"></div>
+    <div id="done-wrap" class="stack" hidden>
+      <h2 class="sectitle muted">Lotes concluídos</h2>
+      <div id="batches-done" class="stack"></div>
     </div>
   </section>
 
   <!-- VENDAS -->
-  <section id="tab-ven" class="wrap" style="padding:0" hidden>
+  <section id="tab-ven" class="stack" hidden>
     <div class="panel">
       <div class="spread"><h2>Ovos disponíveis</h2><button class="btn small" type="button" id="ac-btn">Acertar contagem</button></div>
-      <div class="spread" style="align-items:center">
+      <div class="spread">
         <div><div class="stockbig"><span class="n" id="st-dz">0</span><span class="u" id="st-dz-u">dúzias</span></div><p class="muted" id="st-sub"></p></div>
         <div class="carton" id="st-carton" aria-hidden="true"></div>
       </div>
       <p class="next" id="st-age"></p>
-      <form class="row" id="ac-form" hidden autocomplete="off" style="align-items:flex-end">
+      <form class="row end" id="ac-form" hidden autocomplete="off">
         <label class="field"><span>Quantos ovos tens agora, já com a recolha de hoje?</span><input type="number" id="ac-n" min="0" inputmode="numeric" required></label>
         <button class="btn primary" type="submit">Guardar contagem</button><button class="btn ghost" type="button" id="ac-cancel">Cancelar</button>
       </form>
@@ -290,20 +297,20 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
 
     <form class="panel" id="sale-form" autocomplete="off">
       <div class="spread"><h2>Registar venda</h2><button class="btn small ghost" type="button" id="pr-btn">Preços</button></div>
-      <div class="row" id="pr-form" hidden style="align-items:flex-end">
+      <div class="row end" id="pr-form" hidden>
         <label class="field"><span>Preço da dúzia (€)</span><input type="number" id="pr-dz" step="0.05" min="0" inputmode="decimal"></label>
         <label class="field"><span>Preço da meia dúzia (€)</span><input type="number" id="pr-mz" step="0.05" min="0" inputmode="decimal"></label>
         <button class="btn primary" type="button" id="pr-save">Guardar preços</button>
       </div>
       <div class="steppers">
-        <div class="stepper main"><div class="lbl"><b>Dúzias</b><small id="pr-dz-txt"></small></div>
+        <div class="stepper"><div class="lbl"><b>Dúzias</b><small id="pr-dz-txt"></small></div>
           <div class="ctrl"><button type="button" data-step="s-dz" data-d="-1" aria-label="Menos uma dúzia">−</button><input type="number" id="s-dz" min="0" inputmode="numeric" value="1"><button type="button" data-step="s-dz" data-d="1" aria-label="Mais uma dúzia">+</button></div></div>
         <div class="stepper"><div class="lbl"><b>Meias dúzias</b><small id="pr-mz-txt"></small></div>
           <div class="ctrl"><button type="button" data-step="s-mz" data-d="-1" aria-label="Menos meia dúzia">−</button><input type="number" id="s-mz" min="0" inputmode="numeric" value="0"><button type="button" data-step="s-mz" data-d="1" aria-label="Mais meia dúzia">+</button></div></div>
       </div>
       <label class="field"><span>Valor recebido (€)</span><input type="number" id="s-valor" step="0.01" min="0" inputmode="decimal"></label>
       <p class="hint" id="s-warn" hidden></p>
-      <button class="btn primary totalbtn" type="submit" id="s-save">Registar venda</button>
+      <button class="btn primary block" type="submit" id="s-save">Registar venda</button>
     </form>
 
     <div class="panel">
@@ -314,7 +321,7 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
   </section>
 
   <!-- CONTAS -->
-  <section id="tab-con" class="wrap" style="padding:0" hidden>
+  <section id="tab-con" class="stack" hidden>
     <div class="monthnav"><button class="btn ghost" id="m-prev" type="button" aria-label="Mês anterior">‹</button><h2 id="m-titulo"></h2><button class="btn ghost" id="m-next" type="button" aria-label="Mês seguinte">›</button></div>
     <div class="panel">
       <div class="stats" id="con-stats"></div>
@@ -338,14 +345,14 @@ table.rates button{background:none;border:0;padding:0;font-weight:700;text-decor
         <label class="field"><span>Data</span><input type="date" id="m-data" required></label>
         <label class="field"><span>Nota (opcional)</span><input type="text" id="m-desc" placeholder="Ex.: 2 sacos de 25 kg"></label>
       </div>
-      <button class="btn primary" type="submit" id="m-save">Guardar despesa</button>
+      <button class="btn primary block" type="submit" id="m-save">Guardar despesa</button>
     </form>
     <div class="panel"><h2>Para onde vai o dinheiro</h2><div class="cats" id="con-cats"></div></div>
     <div class="panel"><h2>Movimentos do mês</h2><ul class="days" id="movs"></ul></div>
   </section>
 
   <!-- RESUMO -->
-  <section id="tab-res" class="wrap" style="padding:0" hidden>
+  <section id="tab-res" class="stack" hidden>
     <div class="spread">
       <div class="seg" role="group" aria-label="Período"><button type="button" data-res-n="6" aria-pressed="false">6 meses</button><button type="button" data-res-n="12" aria-pressed="true">12 meses</button></div>
       <button class="btn primary" type="button" id="xlsx-btn">Exportar para Excel</button>
@@ -535,7 +542,7 @@ function renderVendas(){
   const ov=vs.reduce((a,m)=>a+(+m.ovos||0),0),val=vs.reduce((a,m)=>a+(+m.valor||0),0);
   $("#wk-stats").innerHTML=`<div class="stat"><span class="v">${fmtN(ov/12)}</span><span class="k">dúzias vendidas</span></div><div class="stat"><span class="v">${eur(val)}</span><span class="k">recebido</span></div><div class="stat"><span class="v">${vs.length}</span><span class="k">vendas</span></div>`;
   $("#wk-list").innerHTML=vs.length?vs.slice(0,12).map(m=>`<li><div><b>${dzTxt(+m.ovos||0)}</b>${m.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${fmtDay(m.data)}${m.criado?" · "+m.criado.slice(11,16):""}</div></div><span class="amt in">+${eur(+m.valor||0)}</span></li>`).join("")
-    :`<li style="grid-template-columns:1fr"><span class="muted">Ainda sem vendas desde segunda-feira.</span></li>`;
+    :`<li class="li-empty"><span class="muted">Ainda sem vendas desde segunda-feira.</span></li>`;
 }
 ["s-dz","s-mz"].forEach(id=>document.getElementById(id).addEventListener("input",()=>{valorTocado=false;updateSale();}));
 document.querySelectorAll('[data-step="s-dz"],[data-step="s-mz"]').forEach(b=>b.addEventListener("click",()=>{valorTocado=false;setTimeout(updateSale,0);}));
@@ -619,7 +626,7 @@ function renderContas(){
     return `<li style="grid-template-columns:1fr auto auto"><div style="min-width:0"><b>${esc(m.categoria)}</b>${m.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${fmtShort(m.data)}${det.length?" · "+det.join(" · "):""}</div></div>
       <span class="amt ${m.tipo==="venda"?"in":""}">${m.tipo==="venda"?"+":"−"}${eur(+m.valor||0)}</span>
       ${conf?`<span class="row"><button class="btn small danger" type="button" data-mov-yes="${m.id}">Apagar</button><button class="btn small ghost" type="button" data-mov-no>Não</button></span>`:`<button class="xbtn" type="button" data-mov-del="${m.id}" aria-label="Apagar registo">×</button>`}</li>`;
-  }).join(""):`<li style="grid-template-columns:1fr"><span class="muted">${S.ready?"Nada registado em "+MESES_L[+ym.slice(5)-1]+". Usa o formulário acima para juntar a primeira despesa ou venda.":"A carregar…"}</span></li>`;
+  }).join(""):`<li class="li-empty"><span class="muted">${S.ready?"Nada registado em "+MESES_L[+ym.slice(5)-1]+". Usa o formulário acima para juntar a primeira despesa ou venda.":"A carregar…"}</span></li>`;
 }
 setTipo("despesa");
 $("#m-data").value=TODAY;$("#m-data").max=TODAY;
@@ -684,10 +691,10 @@ function renderChart(){
 }
 function renderDays(){
   const list=[...S.eggs.values()].sort((a,b)=>a.data<b.data?1:-1).slice(0,30);
-  if(!list.length){$("#days").innerHTML=`<li style="grid-template-columns:1fr"><span class="muted">${S.ready?"Ainda sem registos. Usa os botões acima para registar a recolha de hoje.":"A carregar…"}</span></li>`;return;}
+  if(!list.length){$("#days").innerHTML=`<li class="li-empty"><span class="muted">${S.ready?"Ainda sem registos. Usa os botões acima para registar a recolha de hoje.":"A carregar…"}</span></li>`;return;}
   $("#days").innerHTML=list.map(e=>{
     const meta=[];if(+e.partidos)meta.push(e.partidos+" partidos");if(+e.incubar)meta.push(e.incubar+" p/ chocar");
-    return `<li><button type="button" data-edit-day="${e.data}"><b>${fmtDay(e.data)}</b>${e.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${meta.join(" · ")||"&nbsp;"}</div></button><span class="num" style="font-size:1.3rem">${+e.total||0}</span></li>`;
+    return `<li><button type="button" data-edit-day="${e.data}"><b>${fmtDay(e.data)}</b>${e.exemplo?' <span class="chip ex">exemplo</span>':""}<div class="meta">${meta.join(" · ")||"&nbsp;"}</div></button><span class="amt">${+e.total||0}</span></li>`;
   }).join("");
 }
 function batchCard(b){
@@ -709,7 +716,7 @@ function batchCard(b){
   const isOpen=S.open.has(b.id);
   const conf=S.confirm;
   return `<article class="panel batch" data-id="${b.id}">
-    <div class="spread"><div><h3>${esc(b.nome)}</h3><p class="muted" style="font-size:.88rem">${esc((ESPECIES[b.especie]||ESPECIES.galinha).n)} · ${+b.ovos} ovos · desde ${fmtShort(b.inicio)}${b.origem?" · "+esc(b.origem):""}</p></div>
+    <div class="spread"><div><h3>${esc(b.nome)}</h3><p class="sub">${esc((ESPECIES[b.especie]||ESPECIES.galinha).n)} · ${+b.ovos} ovos · desde ${fmtShort(b.inicio)}${b.origem?" · "+esc(b.origem):""}</p></div>
       <span class="row">${b.exemplo?'<span class="chip ex">exemplo</span>':""}${concl?'<span class="chip">concluído</span>':lastChip}</span></div>
     ${concl?`<div class="stats">
         <div class="stat"><span class="v">${nasc??"—"}</span><span class="k">nascidos de ${+b.ovos}</span></div>
@@ -720,13 +727,13 @@ function batchCard(b){
       ${ms.map(m=>`<div class="mk ${dia>=m.dia?"done":""}" style="left:${m.dia/D*100}%"><span>${m.dia}</span></div>`).join("")}</div>
     <p class="next">${next}</p>`}
     <details class="more" ${isOpen?"open":""} data-det="${b.id}"><summary>${concl?"Detalhes":"Registar e gerir"}</summary><div class="inner">
-      ${concl?"":`<form class="row" data-reading="${b.id}" autocomplete="off" style="align-items:flex-end">
+      ${concl?"":`<form class="row end" data-reading="${b.id}" autocomplete="off">
         <label class="field"><span>Temp. °C</span><input type="number" step="0.1" inputmode="decimal" name="temp" placeholder="37,5"></label>
         <label class="field"><span>Humidade %</span><input type="number" step="1" inputmode="numeric" name="hum" placeholder="${fase(b,dia)==="eclosao"?"68":"50"}"></label>
         <button class="btn" type="submit">Registar leitura</button></form>
       <p class="hint">Faixa de referência ${fase(b,dia)==="eclosao"?"na fase final":"agora"}: 37,2–37,8 °C e ${fase(b,dia)==="eclosao"?"65–75":"45–55"}% de humidade.</p>`}
       ${leit.length?`<div class="tablewrap"><table class="readings"><thead><tr><th>Quando</th><th>Temp.</th><th>Hum.</th><th></th></tr></thead><tbody>${leit.slice(0,6).map(r=>{const p=avaliar(b,r);return `<tr><td>${fmtShort(r.data)} ${esc(r.hora||"")}</td><td class="n">${r.temp!==""&&r.temp!=null?String(r.temp).replace(".",",")+"°":"—"}</td><td class="n">${r.hum!==""&&r.hum!=null?r.hum+"%":"—"}</td><td>${p.length?`<span class="chip warn">${esc(p[0])}</span>`:""}</td></tr>`;}).join("")}</tbody></table></div>`:`<p class="hint">Sem leituras de temperatura e humidade.</p>`}
-      <div class="row" style="align-items:flex-end">
+      <div class="row end">
         <label class="field"><span>Férteis (ovoscopia)</span><input type="number" min="0" inputmode="numeric" data-field="ferteis" value="${fert??""}"></label>
         <label class="field"><span>Nascidos</span><input type="number" min="0" inputmode="numeric" data-field="nascidos" value="${nasc??""}"></label>
         <button class="btn" type="button" data-save-counts="${b.id}">Guardar</button>
@@ -826,7 +833,7 @@ function tipHTML(a){
 }
 function renderDetail(a){
   const kv=o=>{const e=Object.entries(o).sort((x,y)=>y[1]-x[1]);return e.length?e.map(([k,v])=>`<div><span>${esc(k)}</span><span class="amt">${eur(v)}</span></div>`).join(""):`<div><span class="muted">Nada registado</span><span></span></div>`;};
-  $("#res-detail").innerHTML=`<div class="spread"><h2>Detalhe de ${mLong(a.ym)}</h2><span class="muted" style="font-size:.85rem">toca num mês dos gráficos para mudar</span></div>
+  $("#res-detail").innerHTML=`<div class="spread"><h2>Detalhe de ${mLong(a.ym)}</h2><span class="sub">toca num mês dos gráficos para mudar</span></div>
    <div class="stats">
      <div class="stat"><span class="v">${a.ovos}</span><span class="k">ovos (${a.dias} dias registados)</span></div>
      <div class="stat"><span class="v">${a.dias?(a.ovos/a.dias).toFixed(1).replace(".",","):"—"}</span><span class="k">média por dia</span></div>
@@ -978,11 +985,11 @@ document.addEventListener("click",ev=>{
 });
 function renderRates(){
   const bs=S.batches.slice().sort((a,b)=>a.inicio<b.inicio?1:-1);
-  if(!bs.length){$("#rates").innerHTML=`<tbody><tr><td class="muted" style="text-align:left">Os resultados aparecem quando tiveres lotes na incubadora.</td></tr></tbody>`;return;}
+  if(!bs.length){$("#rates").innerHTML=`<tbody><tr><td class="muted l">Os resultados aparecem quando tiveres lotes na incubadora.</td></tr></tbody>`;return;}
   let tO=0,tF=0,tN=0,tFN=0;
   const rows=bs.map(b=>{const o=+b.ovos,f=b.ferteis!=null&&b.ferteis!==""?+b.ferteis:null,n=b.nascidos!=null&&b.nascidos!==""?+b.nascidos:null;
     if(f!=null){tO+=o;tF+=f;} if(f!=null&&n!=null){tN+=n;tFN+=f;}
-    return `<tr><td>${esc(b.nome)}<div class="muted" style="font-size:.8rem">${fmtShort(b.inicio)}${b.estado==="concluido"?"":" · a chocar"}</div></td><td class="n">${o}</td><td class="n">${f!=null?pct(f,o):"—"}</td><td class="n">${n??"—"}</td><td class="n">${f!=null&&n!=null?pct(n,f):"—"}</td></tr>`;}).join("");
+    return `<tr><td>${esc(b.nome)}<div class="sub">${fmtShort(b.inicio)}${b.estado==="concluido"?"":" · a chocar"}</div></td><td class="n">${o}</td><td class="n">${f!=null?pct(f,o):"—"}</td><td class="n">${n??"—"}</td><td class="n">${f!=null&&n!=null?pct(n,f):"—"}</td></tr>`;}).join("");
   $("#rates").innerHTML=`<thead><tr><th>Lote</th><th>Ovos</th><th>Fertil.</th><th>Nasc.</th><th>Ecl.</th></tr></thead><tbody>${rows}<tr><td><b>Média</b></td><td></td><td class="n"><b>${pct(tF,tO)}</b></td><td></td><td class="n"><b>${pct(tN,tFN)}</b></td></tr></tbody>`;
 }
 

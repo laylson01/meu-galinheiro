@@ -1,6 +1,6 @@
 // Meu Galinheiro — service worker para funcionar sem rede.
 // Ao mudar ficheiros da app, aumenta a versão para os telemóveis receberem a atualização.
-const VERSAO = "meu-galinheiro-v2";
+const VERSAO = "meu-galinheiro-v3";
 const BASE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", (ev) => {
