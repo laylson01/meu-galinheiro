@@ -23,7 +23,7 @@
   --good:#8CC07F; --warn:#E8955A; --bad:#EE8075; --s-gasto:#C0841A; --s-venda:#2E9E83; --s-ovo:#97A87D; --s-ovo2:#4A5440; --comb:#E0604C; --beak:#7A4700; color-scheme:dark;}
 
 *,*::before,*::after{box-sizing:border-box}
-html,body{background:var(--bg);color:var(--ink)}
+html,body{background:var(--bg);color:var(--ink);overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{font-family:var(--f-body);font-size:16px;line-height:1.45;padding:0 16px calc(84px + env(safe-area-inset-bottom,0px))}
 .wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:20px;padding-block:20px}
 .stack{display:flex;flex-direction:column;gap:20px;min-width:0}
@@ -484,7 +484,7 @@ function renderHeader(){
   chips.push(e?`<button type="button" class="tchip good" data-tab="ovos"><span class="dot"></span>${+e.total||0} ovos hoje</button>`
               :`<button type="button" class="tchip warn" data-tab="ovos"><span class="dot"></span>Recolha de hoje por registar</button>`);
   const st=Math.max(0,stockInfo().stock);
-  chips.push(`<button type="button" class="tchip" data-tab="ven"><span class="dot"></span>${fmtN(st/12)} dúzias para vender</button>`);
+  chips.push(`<button type="button" class="tchip" data-tab="ven"><span class="dot"></span>${st<12?st+(st===1?" ovo":" ovos"):Math.floor(st/12)+(st<24?" dúzia":" dúzias")+(st%12?" e "+(st%12):"")} para vender</button>`);
   let nx=null;
   S.batches.filter(b=>b.estado!=="concluido").forEach(b=>{const dia=diaDe(b);marcos(b).forEach(m=>{const em=m.dia-dia;if(em>=0&&em<=3&&(!nx||em<nx.em))nx={m,em};});});
   if(nx)chips.push(`<button type="button" class="tchip alert" data-tab="inc"><span class="dot"></span>${esc(nx.m.t)} ${nx.em===0?"hoje":nx.em===1?"amanhã":"em "+nx.em+" dias"}</button>`);
@@ -1215,7 +1215,14 @@ render();loadEggForm();
 (async()=>{
   if(STANDALONE){
     store=lsStore();
-    if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){try{navigator.serviceWorker.register("sw.js");}catch(e){}}
+    if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+      try{
+        const tinha=!!navigator.serviceWorker.controller;let recarregou=false;
+        // when a new version takes over, reload once so the phone shows it straight away
+        navigator.serviceWorker.addEventListener("controllerchange",()=>{if(tinha&&!recarregou){recarregou=true;location.reload();}});
+        navigator.serviceWorker.register("sw.js").then(r=>{try{r.update();}catch(e){}});
+      }catch(e){}
+    }
   }else{
     let db=null;
     try{db=window.claude&&window.claude.use?await window.claude.use("db"):null;}catch(e){db=null;}
